@@ -1,0 +1,13 @@
+node_modules/
+dist/
+
+# Ferramental local do Claude Code (não faz parte do app)
+.agents/
+.claude/
+skills-lock.json
+
+.env
+.env.local
+index.html.deployed.bak
+index.html.standalone.bak
+*.log
