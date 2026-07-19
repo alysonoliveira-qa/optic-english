@@ -11,3 +11,8 @@ skills-lock.json
 index.html.deployed.bak
 index.html.standalone.bak
 *.log
+
+# Pasta local com material do Vercel (recovery codes etc — sensível, nunca versionar)
+vercel/
+# Pasta gerada pelo Vercel CLI
+.vercel/
