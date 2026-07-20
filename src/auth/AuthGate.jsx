@@ -172,9 +172,12 @@ export default function AuthGate({ children }) {
   const sendLink = useCallback(async (e) => {
     e.preventDefault();
     setBusy(true); setError(null);
+    // emailRedirectTo com barra final ("…/") pra casar com a allowlist do
+    // Supabase (padrão `/**`) — é o que faz o link voltar pro localhost/prod
+    // de onde foi pedido, em vez de cair no Site URL.
     const { error: err } = await supabase.auth.signInWithOtp({
       email: email.trim(),
-      options: { emailRedirectTo: window.location.origin },
+      options: { emailRedirectTo: window.location.origin + "/" },
     });
     setBusy(false);
     if (err) setError(err.message);
@@ -210,7 +213,7 @@ export default function AuthGate({ children }) {
     return (
       <Shell>
         <p style={S.sub}>
-          Entre com seu e-mail. Você vai receber um <strong>link mágico</strong> —
+          Entre com seu e-mail. Você vai receber um <strong>link de acesso</strong> —
           é só clicar nele para entrar, sem senha.
         </p>
         <form onSubmit={sendLink}>
@@ -232,7 +235,7 @@ export default function AuthGate({ children }) {
         {sent && (
           <div style={S.notice}>
             Link enviado! Confira sua caixa de entrada (e o spam) e clique no
-            link para entrar. Pode fechar esta aba.
+            link para entrar.
           </div>
         )}
         {error && <div style={S.error}>{error}</div>}
