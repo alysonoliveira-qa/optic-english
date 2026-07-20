@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import VooxEnglishTrainer from "../voox-english-trainer.jsx";
+import AuthGate from "./auth/AuthGate.jsx";
 import { appStorage } from "./lib/appStorage.js";
 
 // O app usa window.storage.get/set como interface de persistência (mesmo
@@ -10,6 +11,8 @@ window.storage = appStorage;
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <VooxEnglishTrainer />
+    <AuthGate>
+      <VooxEnglishTrainer />
+    </AuthGate>
   </React.StrictMode>
 );
