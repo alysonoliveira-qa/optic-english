@@ -810,7 +810,7 @@ function Home({ data, onOpen, showFixes, setShowFixes, onReset }) {
           Ótica VooX · Feira dos Importados
         </div>
         <h1 style={{ fontFamily: FONT_HEAD, fontWeight: 700, fontSize: 34, margin: "6px 0 4px", color: C.card }}>
-          English no Balcão
+          English for Optics
         </h1>
         <p style={{ margin: 0, color: C.inkSoft, fontSize: 14, lineHeight: 1.5 }}>
           Leia o diálogo completo, domine os cards, treine a pronúncia, faça a dinâmica em dupla e passe na prova.

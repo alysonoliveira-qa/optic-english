@@ -1,4 +1,4 @@
-# English no Balcão
+# English for Optics
 
 Treinador de inglês para a equipe da **Ótica VooX** (Feira dos Importados, Brasília). Nasceu de um atendimento real: uma família do Cazaquistão apareceu na loja, o Alyson travou em termos que já sabia — "atender", "via de pagamento", "receita" — e improvisou frases como "payment receive" e "Thanks for your preference". Este app é o antídoto: os erros reais viram treino.
 
@@ -149,7 +149,7 @@ html = f'''<!DOCTYPE html>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#20342A" />
-  <title>English no Balcão · Ótica VooX</title>
+  <title>English for Optics · Ótica VooX</title>
   <style>html, body {{ margin: 0; padding: 0; background: #ECF0E8; }}</style>
 </head>
 <body>
@@ -172,7 +172,7 @@ const html = require('fs').readFileSync('dist/index.html', 'utf8');
 const dom = new JSDOM(html, { runScripts: 'dangerously', pretendToBeVisual: true });
 setTimeout(() => {
   const t = dom.window.document.body.textContent || '';
-  console.log(t.includes('English no Balcão') && t.includes('Nível 1') ? '✓ Renderizou OK' : '✗ FALHOU');
+  console.log(t.includes('English for Optics') && t.includes('Nível 1') ? '✓ Renderizou OK' : '✗ FALHOU');
 }, 800);
 ```
 

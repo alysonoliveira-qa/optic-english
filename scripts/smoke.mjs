@@ -3,7 +3,7 @@
 import { readFileSync } from "node:fs";
 import { JSDOM } from "jsdom";
 
-const NEEDLES = ["English no Balcão", "Nível 1"];
+const NEEDLES = ["English for Optics", "Nível 1"];
 
 const html = readFileSync("index.html", "utf8");
 

@@ -1,4 +1,4 @@
-// AuthGate — portão de autenticação do "English no Balcão" (Fase 1).
+// AuthGate — portão de autenticação do "English for Optics" (Fase 1).
 //
 // Envolve o app: sem sessão mostra login por magic link; com sessão mas sem
 // nome no perfil pede o nome; com tudo ok renderiza o app + barra de sair.
@@ -7,6 +7,7 @@
 // Visual segue os design tokens ALNA do app (não alterar sem confirmar).
 import React, { useEffect, useState, useCallback } from "react";
 import { supabase } from "../lib/supabaseClient.js";
+import RankingModal from "../ranking/RankingModal.jsx";
 
 const C = {
   bg: "#ECF0E8",
@@ -127,7 +128,7 @@ function Shell({ children }) {
     <div style={S.page}>
       <div style={S.card}>
         <div style={S.kicker}>Ótica VooX · Feira dos Importados</div>
-        <h1 style={S.title}>English no Balcão</h1>
+        <h1 style={S.title}>English for Optics</h1>
         {children}
       </div>
     </div>
@@ -138,6 +139,7 @@ export default function AuthGate({ children }) {
   const [session, setSession] = useState(undefined); // undefined = carregando
   const [profile, setProfile] = useState(undefined); // undefined = carregando
   const [mode, setMode] = useState("signin"); // signin | signup
+  const [showRanking, setShowRanking] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
@@ -318,9 +320,16 @@ export default function AuthGate({ children }) {
     <>
       <div style={S.topbar}>
         <span>{profile.display_name}</span>
+        <button style={S.signout} onClick={() => setShowRanking(true)}>🏆 Ranking</button>
         <button style={S.signout} onClick={signOut}>Sair</button>
       </div>
       {children}
+      {showRanking && (
+        <RankingModal
+          currentUserId={session.user.id}
+          onClose={() => setShowRanking(false)}
+        />
+      )}
     </>
   );
 }

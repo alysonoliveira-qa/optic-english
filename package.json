@@ -3,7 +3,7 @@
   "version": "3.0.0",
   "private": true,
   "type": "module",
-  "description": "English no Balcão — treinador de inglês para a equipe da Ótica VooX",
+  "description": "English for Optics — treinador de inglês para a equipe da Ótica VooX",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

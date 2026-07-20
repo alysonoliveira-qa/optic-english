@@ -1,4 +1,4 @@
-// Build pipeline for "English no Balcão" (Ótica VooX).
+// Build pipeline for "English for Optics" (Ótica VooX).
 //
 // Takes the single-component React source (voox-english-trainer.jsx) and emits a
 // self-contained standalone index.html for GitHub Pages:
@@ -89,7 +89,7 @@ const html = `<!DOCTYPE html>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <meta name="theme-color" content="#20342A" />
-<title>English no Balcão · Ótica VooX</title>
+<title>English for Optics · Ótica VooX</title>
 <style>html, body { margin: 0; padding: 0; background: #ECF0E8; }</style>
 </head>
 <body>

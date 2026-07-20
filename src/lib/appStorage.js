@@ -1,4 +1,4 @@
-// appStorage — adapter de persistência do "English no Balcão".
+// appStorage — adapter de persistência do "English for Optics".
 //
 // Contrato (o app conhece SÓ isto, via window.storage):
 //   get(key) -> Promise<{ key, value }>   (lança "not found" se não existir)
@@ -36,6 +36,26 @@ async function pushToCloud(userId, value) {
   });
 }
 
+// Fase 3 — deriva as estatísticas de ranking do blob e grava no próprio perfil
+// (a policy de UPDATE só permite o dono). Best-effort: nunca quebra o save.
+//   - mastered = nº de cards com rating SRS >= 2 (frases "dominadas")
+//   - level    = maior nível desbloqueado
+async function syncProfileStats(userId, value) {
+  try {
+    const d = JSON.parse(value) || {};
+    const mastered = d.srs
+      ? Object.values(d.srs).filter((c) => (c?.r ?? -1) >= 2).length
+      : 0;
+    const level = d.unlocked || 1;
+    await supabase
+      .from("profiles")
+      .update({ mastered, level, stats_updated_at: new Date().toISOString() })
+      .eq("id", userId);
+  } catch (e) {
+    console.warn("[appStorage] falha ao atualizar ranking (ignorado):", e?.message);
+  }
+}
+
 export const appStorage = {
   async get(key) {
     const userId = await currentUserId();
@@ -61,6 +81,7 @@ export const appStorage = {
       if (data && data.data && Object.keys(data.data).length > 0) {
         const value = JSON.stringify(data.data);
         localStorage.setItem(nsKey, value);
+        syncProfileStats(userId, value); // ranking em dia ao abrir
         return { key, value };
       }
 
@@ -69,6 +90,7 @@ export const appStorage = {
       if (seed) {
         try { await pushToCloud(userId, seed); } catch (_) { /* sobe depois */ }
         localStorage.setItem(nsKey, seed);
+        syncProfileStats(userId, seed);
         return { key, value: seed };
       }
 
@@ -98,6 +120,7 @@ export const appStorage = {
       } catch (e) {
         console.warn("[appStorage] progresso mantido offline (nuvem indisponível):", e?.message);
       }
+      syncProfileStats(userId, value); // atualiza o ranking a cada save
     }
 
     return { key, value };
