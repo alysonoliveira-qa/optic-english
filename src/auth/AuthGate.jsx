@@ -137,10 +137,11 @@ function Shell({ children }) {
 export default function AuthGate({ children }) {
   const [session, setSession] = useState(undefined); // undefined = carregando
   const [profile, setProfile] = useState(undefined); // undefined = carregando
+  const [mode, setMode] = useState("signin"); // signin | signup
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
-  const [sent, setSent] = useState(false);
   const [error, setError] = useState(null);
 
   // Sessão: carrega a atual e escuta mudanças (login via magic link, logout).
@@ -169,20 +170,33 @@ export default function AuthGate({ children }) {
     return () => { alive = false; };
   }, [session]);
 
-  const sendLink = useCallback(async (e) => {
+  // Login por e-mail + senha. Com "Confirm email" DESLIGADO no Supabase, o
+  // signUp já retorna sessão na hora (nenhum e-mail é enviado). Em sucesso, o
+  // onAuthStateChange acima avança o portão.
+  const submitAuth = useCallback(async (e) => {
     e.preventDefault();
     setBusy(true); setError(null);
-    // emailRedirectTo com barra final ("…/") pra casar com a allowlist do
-    // Supabase (padrão `/**`) — é o que faz o link voltar pro localhost/prod
-    // de onde foi pedido, em vez de cair no Site URL.
-    const { error: err } = await supabase.auth.signInWithOtp({
-      email: email.trim(),
-      options: { emailRedirectTo: window.location.origin + "/" },
-    });
+    const creds = { email: email.trim(), password };
+    const { error: err } =
+      mode === "signup"
+        ? await supabase.auth.signUp(creds)
+        : await supabase.auth.signInWithPassword(creds);
     setBusy(false);
-    if (err) setError(err.message);
-    else setSent(true);
-  }, [email]);
+    if (err) {
+      const m = err.message || "";
+      if (/invalid login credentials/i.test(m)) setError("E-mail ou senha incorretos.");
+      else if (/already registered|already exists|user already/i.test(m))
+        setError("Este e-mail já tem conta. Toque em “Já tenho conta — Entrar”.");
+      else if (/password should be at least|at least 6/i.test(m))
+        setError("A senha precisa ter pelo menos 6 caracteres.");
+      else setError(m);
+    }
+  }, [mode, email, password]);
+
+  const toggleMode = useCallback(() => {
+    setMode((m) => (m === "signin" ? "signup" : "signin"));
+    setError(null);
+  }, []);
 
   const saveName = useCallback(async (e) => {
     e.preventDefault();
@@ -208,16 +222,18 @@ export default function AuthGate({ children }) {
     );
   }
 
-  // --- sem sessão: login por magic link ---
+  // --- sem sessão: login por e-mail + senha ---
   if (!session) {
+    const isSignup = mode === "signup";
     return (
       <Shell>
         <p style={S.sub}>
-          Entre com seu e-mail. Você vai receber um <strong>link de acesso</strong> —
-          é só clicar nele para entrar, sem senha.
+          {isSignup
+            ? "Crie sua conta com e-mail e senha para começar a treinar."
+            : "Entre com seu e-mail e senha."}
         </p>
-        <form onSubmit={sendLink}>
-          <label style={S.label} htmlFor="email">Seu e-mail</label>
+        <form onSubmit={submitAuth}>
+          <label style={S.label} htmlFor="email">E-mail</label>
           <input
             id="email"
             style={S.input}
@@ -226,18 +242,35 @@ export default function AuthGate({ children }) {
             autoComplete="email"
             placeholder="voce@exemplo.com"
             value={email}
-            onChange={(e) => { setEmail(e.target.value); setSent(false); }}
+            onChange={(e) => setEmail(e.target.value)}
           />
-          <button style={S.button} type="submit" disabled={busy || !email.trim()}>
-            {busy ? "Enviando…" : "Enviar link de acesso"}
+          <label style={{ ...S.label, marginTop: 12 }} htmlFor="password">Senha</label>
+          <input
+            id="password"
+            style={S.input}
+            type="password"
+            required
+            minLength={6}
+            autoComplete={isSignup ? "new-password" : "current-password"}
+            placeholder="mínimo 6 caracteres"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button
+            style={S.button}
+            type="submit"
+            disabled={busy || !email.trim() || password.length < 6}
+          >
+            {busy ? "Aguarde…" : isSignup ? "Criar conta" : "Entrar"}
           </button>
         </form>
-        {sent && (
-          <div style={S.notice}>
-            Link enviado! Confira sua caixa de entrada (e o spam) e clique no
-            link para entrar.
-          </div>
-        )}
+        <button
+          type="button"
+          onClick={toggleMode}
+          style={{ ...S.signout, marginTop: 14, width: "100%" }}
+        >
+          {isSignup ? "Já tenho conta — Entrar" : "Criar uma conta"}
+        </button>
         {error && <div style={S.error}>{error}</div>}
       </Shell>
     );
