@@ -33,8 +33,8 @@ const LEVELS = [
     id: 1,
     grade: "+0.50",
     name: "Júnior",
-    tag: "Atendimento rápido · ≈300 palavras",
-    desc: "O diálogo completo de uma venda simples: receber, entender, cobrar e se despedir — incluindo o que o cliente fala.",
+    tag: "Atendimento completo de balcão · vocabulário essencial",
+    desc: "Domine o vocabulário e as frases para conduzir um atendimento Júnior inteiro — da recepção à despedida, incluindo o que o cliente fala. Ao fechar a prova, você está apto a atender sozinho.",
     sections: [
       {
         title: "Recepção",
@@ -508,34 +508,187 @@ const ymd = (d) => {
 const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
 
 // ===================== TERMOS DA FASE 1 (deck híbrido) =====================
-// Amostra de ~20 termos p/ validar o formato. Cada termo vem ancorado numa frase
-// de atendimento real. Fase B escala isto até ~300 (extraindo das 199 frases + novos).
-// role: "you" = fala do vendedor · "cust" = fala do cliente.
+// Vocabulário BÁSICO DE BALCÃO da ótica, cada termo ancorado numa frase curta de
+// atendimento. Organizado por tema. role: "you" = vendedor · "cust" = cliente.
+// Fase B em andamento: escalando até ~300. Mantenha frases curtas e naturais.
 const FASE1_TERMS = [
-  // — Recepção —
-  { key: "f1-welcome",      theme: "Recepção",   role: "you",  term: "welcome",          termPt: "bem-vindo(a)",           phrase: "Welcome! How can I help you?",              phrasePt: "Bem-vindo! Como posso ajudar?" },
-  { key: "f1-help",         theme: "Recepção",   role: "you",  term: "to help",           termPt: "ajudar",                 phrase: "How can I help you today?",                 phrasePt: "Como posso te ajudar hoje?" },
-  { key: "f1-glasses",      theme: "Recepção",   role: "cust", term: "glasses",           termPt: "óculos",                 phrase: "I'm looking for new glasses.",              phrasePt: "Estou procurando óculos novos." },
-  { key: "f1-sunglasses",   theme: "Recepção",   role: "you",  term: "sunglasses",        termPt: "óculos de sol",          phrase: "Are you looking for glasses or sunglasses?", phrasePt: "Você procura óculos de grau ou de sol?" },
-  { key: "f1-prescription", theme: "Recepção",   role: "you",  term: "prescription",      termPt: "receita / grau",         phrase: "Do you have your prescription?",            phrasePt: "Você tem sua receita?" },
-  { key: "f1-moment",       theme: "Recepção",   role: "you",  term: "one moment",        termPt: "um momento",             phrase: "One moment, please.",                       phrasePt: "Um momento, por favor." },
-  // — Armação —
-  { key: "f1-frame",        theme: "Armação",    role: "you",  term: "frame",             termPt: "armação",                phrase: "This frame looks great on you.",            phrasePt: "Essa armação ficou ótima em você." },
-  { key: "f1-frame-fit",    theme: "Armação",    role: "you",  term: "to fit",            termPt: "servir / encaixar",      phrase: "This frame fits you very well.",            phrasePt: "Essa armação te serve muito bem." },
-  { key: "f1-lightweight",  theme: "Armação",    role: "you",  term: "lightweight",       termPt: "leve",                   phrase: "This frame is very lightweight.",           phrasePt: "Essa armação é bem leve." },
-  // — Lentes e tratamentos —
-  { key: "f1-lens",         theme: "Lentes",     role: "you",  term: "lens",              termPt: "lente",                  phrase: "This lens is very thin and light.",         phrasePt: "Essa lente é bem fina e leve." },
-  { key: "f1-lenses-ready", theme: "Lentes",     role: "you",  term: "lenses",            termPt: "lentes (par)",           phrase: "Your lenses are ready.",                    phrasePt: "Suas lentes estão prontas." },
-  { key: "f1-coating",      theme: "Lentes",     role: "you",  term: "coating",           termPt: "tratamento / camada",    phrase: "Would you like anti-reflective coating?",   phrasePt: "Gostaria de tratamento antirreflexo?" },
-  { key: "f1-antiglare",    theme: "Lentes",     role: "you",  term: "anti-reflective",   termPt: "antirreflexo",           phrase: "Anti-reflective lenses reduce glare.",      phrasePt: "Lentes antirreflexo reduzem o reflexo." },
-  { key: "f1-bluelight",    theme: "Lentes",     role: "you",  term: "blue light",        termPt: "luz azul",               phrase: "These lenses filter blue light from screens.", phrasePt: "Essas lentes filtram a luz azul das telas." },
-  { key: "f1-scratch",      theme: "Lentes",     role: "you",  term: "scratch-resistant", termPt: "antirrisco",             phrase: "The coating is scratch-resistant.",         phrasePt: "O tratamento é antirrisco." },
-  { key: "f1-photochromic", theme: "Lentes",     role: "you",  term: "photochromic",      termPt: "fotossensível",          phrase: "Photochromic lenses darken in the sun.",    phrasePt: "Lentes fotossensíveis escurecem no sol." },
-  { key: "f1-progressive",  theme: "Lentes",     role: "you",  term: "progressive",       termPt: "multifocal / progressiva", phrase: "Do you need progressive lenses?",         phrasePt: "Você precisa de lentes multifocais?" },
-  // — Preço e pagamento —
-  { key: "f1-total",        theme: "Pagamento",  role: "you",  term: "total",             termPt: "total",                  phrase: "The total is five hundred reais.",          phrasePt: "O total é quinhentos reais." },
-  { key: "f1-installments", theme: "Pagamento",  role: "cust", term: "installments",      termPt: "parcelas",               phrase: "Do you take installments?",                 phrasePt: "Vocês parcelam?" },
-  { key: "f1-receipt",      theme: "Pagamento",  role: "you",  term: "receipt",           termPt: "comprovante",            phrase: "Here's your receipt.",                      phrasePt: "Aqui está seu comprovante." },
+  // ————— Recepção / Cumprimentos —————
+  { key: "f1-rec-welcome",   theme: "Recepção",   role: "you",  term: "welcome",        termPt: "bem-vindo(a)",        phrase: "Welcome! How can I help you?",            phrasePt: "Bem-vindo! Como posso ajudar?" },
+  { key: "f1-rec-help",      theme: "Recepção",   role: "you",  term: "to help",        termPt: "ajudar",              phrase: "How can I help you today?",               phrasePt: "Como posso te ajudar hoje?" },
+  { key: "f1-rec-morning",   theme: "Recepção",   role: "you",  term: "good morning",   termPt: "bom dia",             phrase: "Good morning! Welcome to our store.",     phrasePt: "Bom dia! Bem-vindo à nossa loja." },
+  { key: "f1-rec-afternoon", theme: "Recepção",   role: "you",  term: "good afternoon", termPt: "boa tarde",           phrase: "Good afternoon! Come in, please.",        phrasePt: "Boa tarde! Entre, por favor." },
+  { key: "f1-rec-comein",    theme: "Recepção",   role: "you",  term: "to come in",     termPt: "entrar",              phrase: "Please, come in and take a look.",        phrasePt: "Por favor, entre e dê uma olhada." },
+  { key: "f1-rec-course",    theme: "Recepção",   role: "you",  term: "of course",      termPt: "claro / com certeza", phrase: "Of course! I'll be right with you.",      phrasePt: "Claro! Já vou te atender." },
+  { key: "f1-rec-moment",    theme: "Recepção",   role: "you",  term: "one moment",     termPt: "um momento",          phrase: "One moment, please.",                     phrasePt: "Um momento, por favor." },
+  { key: "f1-rec-name",      theme: "Recepção",   role: "you",  term: "your name",      termPt: "seu nome",            phrase: "Could you tell me your name, please?",    phrasePt: "Pode me dizer seu nome, por favor?" },
+  { key: "f1-rec-english",   theme: "Recepção",   role: "cust", term: "to speak English", termPt: "falar inglês",      phrase: "Do you speak English?",                   phrasePt: "Você fala inglês?" },
+  { key: "f1-rec-alittle",   theme: "Recepção",   role: "you",  term: "a little",       termPt: "um pouco",            phrase: "A little, yes! How can I help?",          phrasePt: "Um pouco, sim! Como posso ajudar?" },
+
+  // ————— Descobrindo a necessidade —————
+  { key: "f1-need-look",     theme: "Necessidade", role: "you", term: "to look for",    termPt: "procurar",            phrase: "What are you looking for today?",         phrasePt: "O que você procura hoje?" },
+  { key: "f1-need-glasses",  theme: "Necessidade", role: "cust", term: "glasses",       termPt: "óculos",              phrase: "I'm looking for new glasses.",            phrasePt: "Estou procurando óculos novos." },
+  { key: "f1-need-sun",      theme: "Necessidade", role: "you", term: "sunglasses",     termPt: "óculos de sol",       phrase: "Glasses or sunglasses?",                  phrasePt: "Óculos de grau ou de sol?" },
+  { key: "f1-need-reading",  theme: "Necessidade", role: "you", term: "reading glasses", termPt: "óculos de leitura",  phrase: "Do you need reading glasses?",            phrasePt: "Você precisa de óculos de leitura?" },
+  { key: "f1-need-presc",    theme: "Necessidade", role: "you", term: "prescription",   termPt: "receita / grau",      phrase: "Do you have your prescription?",          phrasePt: "Você tem sua receita?" },
+  { key: "f1-need-old",      theme: "Necessidade", role: "cust", term: "old glasses",   termPt: "óculos antigos",      phrase: "I have my old glasses with me.",          phrasePt: "Tenho meus óculos antigos comigo." },
+  { key: "f1-need-see",      theme: "Necessidade", role: "you", term: "may I see",      termPt: "posso ver",           phrase: "May I see your glasses?",                 phrasePt: "Posso ver seus óculos?" },
+  { key: "f1-need-forwhat",  theme: "Necessidade", role: "you", term: "to use for",     termPt: "usar para",           phrase: "What will you use them for?",             phrasePt: "Você vai usar para quê?" },
+  { key: "f1-need-driving",  theme: "Necessidade", role: "cust", term: "for driving",   termPt: "para dirigir",        phrase: "Mostly for driving.",                     phrasePt: "Principalmente para dirigir." },
+  { key: "f1-need-computer", theme: "Necessidade", role: "cust", term: "for the computer", termPt: "para o computador", phrase: "I need them for the computer.",          phrasePt: "Preciso deles para o computador." },
+
+  // ————— Armação —————
+  { key: "f1-frame-frame",   theme: "Armação",    role: "you",  term: "frame",          termPt: "armação",             phrase: "This frame looks great on you.",          phrasePt: "Essa armação ficou ótima em você." },
+  { key: "f1-frame-fit",     theme: "Armação",    role: "you",  term: "to fit",         termPt: "servir / encaixar",   phrase: "This frame fits you very well.",          phrasePt: "Essa armação te serve muito bem." },
+  { key: "f1-frame-light",   theme: "Armação",    role: "you",  term: "lightweight",    termPt: "leve",                phrase: "This frame is very lightweight.",         phrasePt: "Essa armação é bem leve." },
+  { key: "f1-frame-color",   theme: "Armação",    role: "you",  term: "color",          termPt: "cor",                 phrase: "We have this frame in other colors.",     phrasePt: "Temos essa armação em outras cores." },
+  { key: "f1-frame-size",    theme: "Armação",    role: "you",  term: "size",           termPt: "tamanho",             phrase: "What size do you usually wear?",          phrasePt: "Que tamanho você costuma usar?" },
+  { key: "f1-frame-round",   theme: "Armação",    role: "you",  term: "round",          termPt: "redonda",             phrase: "Do you prefer round or square frames?",   phrasePt: "Você prefere armação redonda ou quadrada?" },
+  { key: "f1-frame-metal",   theme: "Armação",    role: "you",  term: "metal",          termPt: "metal",               phrase: "This frame is made of metal.",            phrasePt: "Essa armação é de metal." },
+  { key: "f1-frame-acetate", theme: "Armação",    role: "you",  term: "acetate",        termPt: "acetato",             phrase: "This one is acetate, very comfortable.",  phrasePt: "Essa é de acetato, bem confortável." },
+  { key: "f1-frame-try",     theme: "Armação",    role: "you",  term: "to try on",      termPt: "experimentar",        phrase: "Would you like to try it on?",            phrasePt: "Gostaria de experimentar?" },
+  { key: "f1-frame-mirror",  theme: "Armação",    role: "you",  term: "mirror",         termPt: "espelho",             phrase: "The mirror is right here.",               phrasePt: "O espelho está bem aqui." },
+  { key: "f1-frame-suit",    theme: "Armação",    role: "you",  term: "to suit",        termPt: "cair bem / combinar", phrase: "This shape really suits your face.",       phrasePt: "Esse formato cai muito bem no seu rosto." },
+
+  // ————— Lentes —————
+  { key: "f1-lens-lens",     theme: "Lentes",     role: "you",  term: "lens",           termPt: "lente",               phrase: "This lens is very thin and light.",       phrasePt: "Essa lente é bem fina e leve." },
+  { key: "f1-lens-ready",    theme: "Lentes",     role: "you",  term: "lenses",         termPt: "lentes (par)",        phrase: "Your lenses are ready.",                  phrasePt: "Suas lentes estão prontas." },
+  { key: "f1-lens-thin",     theme: "Lentes",     role: "you",  term: "thin",           termPt: "fina",                phrase: "We can make the lenses thinner.",         phrasePt: "Podemos deixar as lentes mais finas." },
+  { key: "f1-lens-single",   theme: "Lentes",     role: "you",  term: "single vision",  termPt: "visão simples",       phrase: "These are single vision lenses.",         phrasePt: "Essas são lentes de visão simples." },
+  { key: "f1-lens-progr",    theme: "Lentes",     role: "you",  term: "progressive",    termPt: "multifocal",          phrase: "Do you need progressive lenses?",         phrasePt: "Você precisa de lentes multifocais?" },
+  { key: "f1-lens-clean",    theme: "Lentes",     role: "you",  term: "to clean",       termPt: "limpar",              phrase: "Clean the lenses with this cloth.",       phrasePt: "Limpe as lentes com este paninho." },
+  { key: "f1-lens-cloth",    theme: "Lentes",     role: "you",  term: "cleaning cloth", termPt: "paninho de limpeza",  phrase: "Here's a cleaning cloth for you.",        phrasePt: "Aqui está um paninho de limpeza para você." },
+  { key: "f1-lens-clear",    theme: "Lentes",     role: "you",  term: "clear",          termPt: "transparente / nítida", phrase: "Your vision will be much clearer.",      phrasePt: "Sua visão vai ficar bem mais nítida." },
+
+  // ————— Tratamentos —————
+  { key: "f1-coat-coating",  theme: "Tratamentos", role: "you", term: "coating",        termPt: "tratamento / camada", phrase: "Would you like anti-reflective coating?", phrasePt: "Gostaria de tratamento antirreflexo?" },
+  { key: "f1-coat-antiref",  theme: "Tratamentos", role: "you", term: "anti-reflective", termPt: "antirreflexo",       phrase: "Anti-reflective lenses reduce glare.",    phrasePt: "Lentes antirreflexo reduzem o reflexo." },
+  { key: "f1-coat-blue",     theme: "Tratamentos", role: "you", term: "blue light",     termPt: "luz azul",            phrase: "These lenses filter blue light from screens.", phrasePt: "Essas lentes filtram a luz azul das telas." },
+  { key: "f1-coat-scratch",  theme: "Tratamentos", role: "you", term: "scratch-resistant", termPt: "antirrisco",       phrase: "The coating is scratch-resistant.",       phrasePt: "O tratamento é antirrisco." },
+  { key: "f1-coat-photo",    theme: "Tratamentos", role: "you", term: "photochromic",   termPt: "fotossensível",       phrase: "Photochromic lenses darken in the sun.",  phrasePt: "Lentes fotossensíveis escurecem no sol." },
+  { key: "f1-coat-uv",       theme: "Tratamentos", role: "you", term: "UV protection",  termPt: "proteção UV",         phrase: "These lenses have full UV protection.",   phrasePt: "Essas lentes têm proteção UV total." },
+  { key: "f1-coat-glare",    theme: "Tratamentos", role: "you", term: "glare",          termPt: "reflexo / ofuscamento", phrase: "This coating cuts glare at night.",     phrasePt: "Esse tratamento reduz o reflexo à noite." },
+
+  // ————— Receita / Grau —————
+  { key: "f1-presc-degree",  theme: "Receita",    role: "cust", term: "degree",         termPt: "grau",                phrase: "My degree is a little strong.",           phrasePt: "Meu grau é um pouco forte." },
+  { key: "f1-presc-eye",     theme: "Receita",    role: "you",  term: "eye exam",       termPt: "exame de vista",      phrase: "When was your last eye exam?",            phrasePt: "Quando foi seu último exame de vista?" },
+  { key: "f1-presc-doctor",  theme: "Receita",    role: "you",  term: "eye doctor",     termPt: "oftalmologista",      phrase: "You should see an eye doctor first.",     phrasePt: "Você deveria ver um oftalmologista primeiro." },
+  { key: "f1-presc-updated", theme: "Receita",    role: "you",  term: "up to date",     termPt: "atualizada / em dia", phrase: "Is your prescription up to date?",        phrasePt: "Sua receita está atualizada?" },
+  { key: "f1-presc-far",     theme: "Receita",    role: "cust", term: "farsighted",     termPt: "hipermetrope",        phrase: "I'm a little farsighted.",                phrasePt: "Sou um pouco hipermetrope." },
+  { key: "f1-presc-near",    theme: "Receita",    role: "cust", term: "nearsighted",    termPt: "míope",               phrase: "I'm nearsighted, I can't see far.",       phrasePt: "Sou míope, não enxergo de longe." },
+
+  // ————— Provar / Ajuste —————
+  { key: "f1-try-look",      theme: "Provar",     role: "cust", term: "how do I look",  termPt: "como eu fiquei",      phrase: "How do I look with these?",               phrasePt: "Como eu fiquei com esses?" },
+  { key: "f1-try-comfort",   theme: "Provar",     role: "you",  term: "comfortable",    termPt: "confortável",         phrase: "Are they comfortable on your nose?",      phrasePt: "Está confortável no seu nariz?" },
+  { key: "f1-try-tight",     theme: "Provar",     role: "cust", term: "too tight",      termPt: "muito apertado",      phrase: "They feel a little too tight.",           phrasePt: "Estão um pouco apertados." },
+  { key: "f1-try-adjust",    theme: "Provar",     role: "you",  term: "to adjust",      termPt: "ajustar",             phrase: "I can adjust them for you.",              phrasePt: "Posso ajustar para você." },
+  { key: "f1-try-loose",     theme: "Provar",     role: "you",  term: "loose",          termPt: "frouxo / solto",      phrase: "If they feel loose, come back.",          phrasePt: "Se ficarem frouxos, volte aqui." },
+
+  // ————— Preço e pagamento —————
+  { key: "f1-pay-howmuch",   theme: "Pagamento",  role: "cust", term: "how much",       termPt: "quanto custa",        phrase: "How much is this one?",                   phrasePt: "Quanto custa este?" },
+  { key: "f1-pay-total",     theme: "Pagamento",  role: "you",  term: "total",          termPt: "total",               phrase: "The total is five hundred reais.",        phrasePt: "O total é quinhentos reais." },
+  { key: "f1-pay-price",     theme: "Pagamento",  role: "you",  term: "price",          termPt: "preço",               phrase: "The price includes the lenses.",          phrasePt: "O preço já inclui as lentes." },
+  { key: "f1-pay-card",      theme: "Pagamento",  role: "cust", term: "to pay by card", termPt: "pagar no cartão",     phrase: "Can I pay by card?",                      phrasePt: "Posso pagar no cartão?" },
+  { key: "f1-pay-debit",     theme: "Pagamento",  role: "you",  term: "debit or credit", termPt: "débito ou crédito",  phrase: "Debit or credit?",                        phrasePt: "Débito ou crédito?" },
+  { key: "f1-pay-cash",      theme: "Pagamento",  role: "you",  term: "cash",           termPt: "dinheiro / à vista",  phrase: "Do you have a discount for cash?",        phrasePt: "Tem desconto à vista?" },
+  { key: "f1-pay-install",   theme: "Pagamento",  role: "cust", term: "installments",   termPt: "parcelas",            phrase: "Do you take installments?",               phrasePt: "Vocês parcelam?" },
+  { key: "f1-pay-discount",  theme: "Pagamento",  role: "you",  term: "discount",       termPt: "desconto",            phrase: "I can give you a small discount.",        phrasePt: "Posso te dar um pequeno desconto." },
+  { key: "f1-pay-receipt",   theme: "Pagamento",  role: "you",  term: "receipt",        termPt: "comprovante",         phrase: "Here's your receipt.",                    phrasePt: "Aqui está seu comprovante." },
+
+  // ————— Prazo e entrega —————
+  { key: "f1-del-ready",     theme: "Entrega",    role: "you",  term: "to be ready",    termPt: "ficar pronto",        phrase: "They'll be ready in three days.",         phrasePt: "Ficam prontos em três dias." },
+  { key: "f1-del-pickup",    theme: "Entrega",    role: "you",  term: "to pick up",     termPt: "retirar / buscar",    phrase: "You can pick them up on Friday.",         phrasePt: "Você pode retirar na sexta." },
+  { key: "f1-del-call",      theme: "Entrega",    role: "you",  term: "to call",        termPt: "ligar / avisar",      phrase: "We'll call you when they're ready.",      phrasePt: "A gente te liga quando ficarem prontos." },
+  { key: "f1-del-wait",      theme: "Entrega",    role: "cust", term: "to wait",        termPt: "esperar",             phrase: "How long do I have to wait?",             phrasePt: "Quanto tempo eu preciso esperar?" },
+
+  // ————— Problemas / Troca / Garantia —————
+  { key: "f1-prob-warranty", theme: "Garantia",   role: "you",  term: "warranty",       termPt: "garantia",            phrase: "The frame has a one-year warranty.",      phrasePt: "A armação tem um ano de garantia." },
+  { key: "f1-prob-exchange", theme: "Garantia",   role: "you",  term: "to exchange",    termPt: "trocar",              phrase: "You can exchange them within seven days.", phrasePt: "Você pode trocar em até sete dias." },
+  { key: "f1-prob-broken",   theme: "Garantia",   role: "cust", term: "broken",         termPt: "quebrado",            phrase: "My glasses are broken.",                  phrasePt: "Meus óculos estão quebrados." },
+  { key: "f1-prob-repair",   theme: "Garantia",   role: "you",  term: "to repair",      termPt: "consertar",           phrase: "We can repair them for you.",             phrasePt: "Podemos consertar para você." },
+  { key: "f1-prob-sorry",    theme: "Garantia",   role: "you",  term: "I'm sorry",      termPt: "sinto muito",         phrase: "I'm sorry about that. Let me help.",      phrasePt: "Sinto muito por isso. Deixa eu ajudar." },
+
+  // ————— Small talk / rapport —————
+  { key: "f1-st-howareyou",  theme: "Small talk", role: "you",  term: "how are you",    termPt: "como vai",            phrase: "Hello! How are you today?",               phrasePt: "Olá! Como vai você hoje?" },
+  { key: "f1-st-meet",       theme: "Small talk", role: "you",  term: "nice to meet you", termPt: "prazer em conhecer", phrase: "Nice to meet you!",                       phrasePt: "Prazer em te conhecer!" },
+  { key: "f1-st-seat",       theme: "Small talk", role: "you",  term: "to have a seat", termPt: "sentar-se",           phrase: "Please, have a seat.",                    phrasePt: "Por favor, sente-se." },
+  { key: "f1-st-water",      theme: "Small talk", role: "you",  term: "water",          termPt: "água",                phrase: "Would you like some water?",              phrasePt: "Aceita uma água?" },
+  { key: "f1-st-niceday",    theme: "Small talk", role: "you",  term: "nice day",       termPt: "dia bom",             phrase: "It's a nice day, isn't it?",              phrasePt: "Está um dia bom, não é?" },
+
+  // ————— Cadastro e contato —————
+  { key: "f1-reg-spell",     theme: "Cadastro",   role: "you",  term: "to spell",       termPt: "soletrar",            phrase: "Could you spell your name, please?",      phrasePt: "Pode soletrar seu nome, por favor?" },
+  { key: "f1-reg-phone",     theme: "Cadastro",   role: "you",  term: "phone number",   termPt: "número de telefone",  phrase: "What's your phone number?",               phrasePt: "Qual é o seu telefone?" },
+  { key: "f1-reg-whats",     theme: "Cadastro",   role: "you",  term: "WhatsApp",       termPt: "WhatsApp",            phrase: "Can I send it to your WhatsApp?",         phrasePt: "Posso enviar no seu WhatsApp?" },
+  { key: "f1-reg-address",   theme: "Cadastro",   role: "you",  term: "address",        termPt: "endereço",            phrase: "What's your address?",                    phrasePt: "Qual é o seu endereço?" },
+  { key: "f1-reg-email",     theme: "Cadastro",   role: "you",  term: "email",          termPt: "e-mail",              phrase: "Could I have your email, please?",        phrasePt: "Pode me passar seu e-mail?" },
+  { key: "f1-reg-register",  theme: "Cadastro",   role: "you",  term: "to register",    termPt: "cadastrar",           phrase: "Let me register your information.",       phrasePt: "Deixa eu fazer seu cadastro." },
+
+  // ————— Segunda via e exame —————
+  { key: "f1-copy-copy",     theme: "Segunda via", role: "you", term: "to copy",        termPt: "copiar",              phrase: "I can copy the prescription from your old lenses.", phrasePt: "Posso copiar o grau das suas lentes antigas." },
+  { key: "f1-copy-measure",  theme: "Segunda via", role: "you", term: "to measure",     termPt: "medir",               phrase: "Let me measure your current lenses.",     phrasePt: "Deixa eu medir suas lentes atuais." },
+  { key: "f1-copy-schedule", theme: "Segunda via", role: "you", term: "to schedule",    termPt: "agendar",             phrase: "Would you like to schedule an eye test?", phrasePt: "Gostaria de agendar um exame de vista?" },
+  { key: "f1-copy-appt",     theme: "Segunda via", role: "you", term: "appointment",    termPt: "horário / consulta",  phrase: "Your appointment is at three.",           phrasePt: "Seu horário é às três." },
+  { key: "f1-copy-free",     theme: "Segunda via", role: "you", term: "free",           termPt: "gratuito / de graça", phrase: "We offer a free eye test.",               phrasePt: "Oferecemos um exame de vista grátis." },
+
+  // ————— Acessórios —————
+  { key: "f1-acc-case",      theme: "Acessórios", role: "you",  term: "case",           termPt: "estojo",              phrase: "The case comes with the glasses.",        phrasePt: "O estojo vem junto com os óculos." },
+  { key: "f1-acc-strap",     theme: "Acessórios", role: "you",  term: "strap",          termPt: "cordinha",            phrase: "Would you like a strap for the kids?",    phrasePt: "Quer uma cordinha para as crianças?" },
+  { key: "f1-acc-spray",     theme: "Acessórios", role: "you",  term: "lens spray",     termPt: "spray de limpeza",    phrase: "Use this spray to clean the lenses.",     phrasePt: "Use este spray para limpar as lentes." },
+  { key: "f1-acc-kit",       theme: "Acessórios", role: "you",  term: "cleaning kit",   termPt: "kit de limpeza",      phrase: "This kit has a cloth and a spray.",       phrasePt: "Este kit tem um paninho e um spray." },
+  { key: "f1-acc-extra",     theme: "Acessórios", role: "you",  term: "extra pair",     termPt: "par extra",           phrase: "Do you want an extra pair?",              phrasePt: "Quer um par extra?" },
+
+  // ————— Crianças e esporte —————
+  { key: "f1-kid-kids",      theme: "Crianças",   role: "you",  term: "kids' glasses",  termPt: "óculos infantil",     phrase: "We have kids' glasses too.",              phrasePt: "Temos óculos infantil também." },
+  { key: "f1-kid-flex",      theme: "Crianças",   role: "you",  term: "flexible",       termPt: "flexível",            phrase: "This frame is flexible and safe for children.", phrasePt: "Essa armação é flexível e segura para crianças." },
+  { key: "f1-kid-resist",    theme: "Crianças",   role: "you",  term: "resistant",      termPt: "resistente",          phrase: "It's very resistant to falls.",           phrasePt: "É bem resistente a quedas." },
+  { key: "f1-kid-sport",     theme: "Crianças",   role: "you",  term: "sports glasses", termPt: "óculos esportivo",    phrase: "Do you need sports glasses?",             phrasePt: "Você precisa de óculos esportivo?" },
+  { key: "f1-kid-polar",     theme: "Crianças",   role: "you",  term: "polarized",      termPt: "polarizada",          phrase: "Polarized lenses are great for driving.", phrasePt: "Lentes polarizadas são ótimas para dirigir." },
+
+  // ————— Objeção de preço —————
+  { key: "f1-obj-expensive", theme: "Objeções",   role: "cust", term: "expensive",      termPt: "caro",                phrase: "That's a bit expensive for me.",          phrasePt: "Está um pouco caro para mim." },
+  { key: "f1-obj-budget",    theme: "Objeções",   role: "you",  term: "budget",         termPt: "orçamento (limite)",  phrase: "What's your budget?",                     phrasePt: "Qual é o seu orçamento?" },
+  { key: "f1-obj-cheaper",   theme: "Objeções",   role: "you",  term: "cheaper",        termPt: "mais barato",         phrase: "We have a cheaper option here.",          phrasePt: "Temos uma opção mais barata aqui." },
+  { key: "f1-obj-think",     theme: "Objeções",   role: "cust", term: "to think about it", termPt: "pensar a respeito", phrase: "I need to think about it.",              phrasePt: "Preciso pensar a respeito." },
+  { key: "f1-obj-another",   theme: "Objeções",   role: "you",  term: "another option", termPt: "outra opção",         phrase: "Let me show you another option.",         phrasePt: "Deixa eu te mostrar outra opção." },
+  { key: "f1-obj-worth",     theme: "Objeções",   role: "you",  term: "worth it",       termPt: "vale a pena",         phrase: "For daily use, it's worth it.",           phrasePt: "Para o dia a dia, vale a pena." },
+
+  // ————— Recomendação / venda —————
+  { key: "f1-sell-recommend", theme: "Recomendação", role: "you", term: "to recommend", termPt: "recomendar",          phrase: "I recommend these lenses for you.",       phrasePt: "Eu recomendo essas lentes para você." },
+  { key: "f1-sell-best",     theme: "Recomendação", role: "you",  term: "the best",      termPt: "o melhor",            phrase: "This is our best option.",                phrasePt: "Essa é a nossa melhor opção." },
+  { key: "f1-sell-protect",  theme: "Recomendação", role: "you",  term: "to protect",    termPt: "proteger",            phrase: "These lenses protect your eyes.",         phrasePt: "Essas lentes protegem seus olhos." },
+  { key: "f1-sell-lookgood", theme: "Recomendação", role: "you",  term: "to look good",  termPt: "ficar bem",           phrase: "You look good in these!",                 phrasePt: "Você fica bem com esses!" },
+  { key: "f1-sell-show",     theme: "Recomendação", role: "you",  term: "to show",       termPt: "mostrar",             phrase: "Let me show you some options.",           phrasePt: "Deixa eu te mostrar algumas opções." },
+  { key: "f1-sell-prefer",   theme: "Recomendação", role: "you",  term: "to prefer",     termPt: "preferir",            phrase: "Which one do you prefer?",                phrasePt: "Qual você prefere?" },
+  { key: "f1-sell-choose",   theme: "Recomendação", role: "you",  term: "to choose",     termPt: "escolher",            phrase: "Take your time to choose.",               phrasePt: "Fique à vontade para escolher." },
+
+  // ————— Confirmar entendimento —————
+  { key: "f1-conf-under",    theme: "Confirmar",  role: "you",  term: "to understand",  termPt: "entender",            phrase: "Did you understand everything?",          phrasePt: "Você entendeu tudo?" },
+  { key: "f1-conf-repeat",   theme: "Confirmar",  role: "you",  term: "to repeat",      termPt: "repetir",             phrase: "Let me repeat, please.",                  phrasePt: "Deixa eu repetir, por favor." },
+  { key: "f1-conf-clear",    theme: "Confirmar",  role: "you",  term: "clear",          termPt: "claro / compreensível", phrase: "Is that clear for you?",                phrasePt: "Ficou claro para você?" },
+  { key: "f1-conf-noproblem", theme: "Confirmar", role: "you",  term: "no problem",     termPt: "sem problema",        phrase: "No problem, I can explain again.",        phrasePt: "Sem problema, posso explicar de novo." },
+
+  // ————— Datas e prazo —————
+  { key: "f1-date-today",    theme: "Datas",      role: "you",  term: "today",          termPt: "hoje",                phrase: "It can be ready today.",                  phrasePt: "Pode ficar pronto hoje." },
+  { key: "f1-date-tomorrow", theme: "Datas",      role: "you",  term: "tomorrow",       termPt: "amanhã",              phrase: "Come back tomorrow, please.",             phrasePt: "Volte amanhã, por favor." },
+  { key: "f1-date-days",     theme: "Datas",      role: "you",  term: "days",           termPt: "dias",                phrase: "It takes about three days.",              phrasePt: "Leva uns três dias." },
+  { key: "f1-date-week",     theme: "Datas",      role: "you",  term: "next week",      termPt: "semana que vem",      phrase: "It'll be ready next week.",               phrasePt: "Fica pronto semana que vem." },
+  { key: "f1-date-howlong",  theme: "Datas",      role: "cust", term: "how long",       termPt: "quanto tempo",        phrase: "How long does it take?",                  phrasePt: "Quanto tempo leva?" },
+
+  // ————— Uso e cuidado —————
+  { key: "f1-care-usedto",   theme: "Cuidado",    role: "you",  term: "to get used to", termPt: "se acostumar",        phrase: "You'll get used to them in a few days.",  phrasePt: "Você se acostuma em poucos dias." },
+  { key: "f1-care-avoid",    theme: "Cuidado",    role: "you",  term: "to avoid",       termPt: "evitar",              phrase: "Avoid cleaning them with your shirt.",    phrasePt: "Evite limpar com a camiseta." },
+  { key: "f1-care-warm",     theme: "Cuidado",    role: "you",  term: "warm water",     termPt: "água morna",          phrase: "Wash them with warm water.",              phrasePt: "Lave com água morna." },
+  { key: "f1-care-careful",  theme: "Cuidado",    role: "you",  term: "carefully",      termPt: "com cuidado",         phrase: "Handle the lenses carefully.",            phrasePt: "Manuseie as lentes com cuidado." },
+
+  // ————— Pagamento (extra) —————
+  { key: "f1-pay-pix",       theme: "Pagamento",  role: "you",  term: "Pix",            termPt: "Pix",                 phrase: "You can also pay with Pix.",              phrasePt: "Você também pode pagar no Pix." },
+  { key: "f1-pay-change",    theme: "Pagamento",  role: "you",  term: "change",         termPt: "troco",               phrase: "Here's your change.",                     phrasePt: "Aqui está seu troco." },
+
+  // ————— Despedida —————
+  { key: "f1-bye-thanks",    theme: "Despedida",  role: "you",  term: "thank you",      termPt: "obrigado(a)",         phrase: "Thank you for choosing us!",              phrasePt: "Obrigado por escolher a gente!" },
+  { key: "f1-bye-welcome",   theme: "Despedida",  role: "you",  term: "you're welcome", termPt: "de nada",             phrase: "You're welcome! Have a great day.",       phrasePt: "De nada! Tenha um ótimo dia." },
+  { key: "f1-bye-again",     theme: "Despedida",  role: "you",  term: "come again",     termPt: "volte sempre",        phrase: "Please come again!",                      phrasePt: "Volte sempre!" },
+  { key: "f1-bye-care",      theme: "Despedida",  role: "you",  term: "take care",      termPt: "se cuida",            phrase: "Take care of your new glasses!",          phrasePt: "Cuide bem dos seus óculos novos!" },
+  { key: "f1-bye-slow",      theme: "Despedida",  role: "cust", term: "more slowly",    termPt: "mais devagar",        phrase: "Sorry, can you speak more slowly?",       phrasePt: "Desculpa, pode falar mais devagar?" },
 ];
 
 // ===================== DINÂMICAS =====================
