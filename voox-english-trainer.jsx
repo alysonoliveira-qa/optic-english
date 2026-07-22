@@ -1293,7 +1293,7 @@ function LevelView({ level, tab, setTab, data, cards, easyCount, quizUnlocked, d
   const pass = passFor(level);
   const daily = data.daily || DEFAULT_DAILY;
   const today = ymd(new Date());
-  const introducedToday = Object.values(daily.introduced || {}).filter((d) => d === today).length;
+  const introducedToday = deck.filter((t) => (daily.introduced || {})[t.key] === today).length;
   const deckSpokenWell = deck.filter((t) => (data.pron[t.key] || 0) >= 80).length;
   return (
     <div>
@@ -1982,8 +1982,9 @@ function MetaDoDiaTab({ terms, srs, pron, daily, studyCard, savePron, setPace })
 
   const today = ymd(new Date());
   const introduced = daily.introduced || {};
-  const introducedToday = Object.values(introduced).filter((d) => d === today).length;
-  const totalIntroduced = Object.keys(introduced).length;
+  // Contagens POR NÍVEL (deck atual) para casar exatamente com o mapa abaixo.
+  const introducedToday = terms.filter((t) => introduced[t.key] === today).length;
+  const totalIntroduced = terms.filter((t) => introduced[t.key]).length;
   const pace = daily.pace;
   const goalMet = introducedToday >= pace;
 
@@ -2164,9 +2165,9 @@ function MetaDoDiaTab({ terms, srs, pron, daily, studyCard, savePron, setPace })
             const studied = !!introduced[t.key]; // já avaliado no SRS (aprendeu, mesmo sem falar)
             const isCurrent = current && current.key === t.key;
             let bg, color, content, borderColor, opacity = 1;
-            if (p >= 80)        { bg = C.ok;     color = "#fff";   content = "✓";     borderColor = C.ok; }      // falou bem
-            else if (p > 0)     { bg = C.gold;   color = "#fff";   content = i + 1;   borderColor = C.gold; }    // falou, melhorar
-            else if (studied)   { bg = C.okSoft; color = C.card;   content = "📖";    borderColor = C.ok; }      // estudado, falta falar
+            if (p >= 80)        { bg = C.ok;     color = "#fff";   content = "✓";     borderColor = C.ok; }        // falou bem
+            else if (p > 0)     { bg = C.gold;   color = "#fff";   content = i + 1;   borderColor = C.gold; }      // falou, melhorar
+            else if (studied)   { bg = "#E8F1EB"; color = C.inkSoft; content = i + 1;  borderColor = "#D3E4D9"; }   // estudado, falta falar (bem sutil)
             else                { bg = C.paper;  color = C.inkSoft; content = i + 1;  borderColor = C.line; opacity = 0.5; } // não aberto
             const status = p >= 80 ? "falado bem" : p > 0 ? `falado ${p}%` : studied ? "estudado — falta falar" : "não aberto";
             return (
@@ -2186,7 +2187,7 @@ function MetaDoDiaTab({ terms, srs, pron, daily, studyCard, savePron, setPace })
           })}
         </div>
         <div style={{ fontSize: 11, color: C.inkSoft, marginTop: 8, lineHeight: 1.6 }}>
-          <b style={{ color: C.ok }}>✓ verde</b> falou bem (≥80%) · <b style={{ color: C.goldDeep }}>dourado</b> falou, dá pra melhorar · <b style={{ color: C.ok }}>📖 verde-claro</b> estudado, falta falar · apagado = não aberto
+          <b style={{ color: C.ok }}>✓ verde</b> falou bem (≥80%) · <b style={{ color: C.goldDeep }}>dourado</b> falou, dá pra melhorar · <b style={{ color: "#6FAE86" }}>verde-claro</b> estudado, falta falar · apagado = não aberto
         </div>
         <div style={{ fontSize: 11, color: C.inkSoft, marginTop: 4, lineHeight: 1.5, fontStyle: "italic" }}>
           Pode abrir pra estudar agora e falar depois (quando der pra falar em voz alta) — a prova só exige a fala de todos.
