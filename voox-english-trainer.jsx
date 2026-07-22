@@ -2155,43 +2155,49 @@ function MetaDoDiaTab({ terms, srs, pron, daily, studyCard, savePron, setPace })
         </>
       )}
 
-      {/* Mapa da fala: como cada termo foi FALADO. Toque para praticar de novo. */}
+      {/* Mapa híbrido: estudo (avaliação SRS) + fala. Toque num quadradinho para praticar. */}
       <div style={{ marginTop: 18, background: C.paper, border: `1px solid ${C.line}`, borderRadius: 12, padding: "12px 12px 10px" }}>
-        <div style={{ fontSize: 12, fontWeight: 700, color: C.inkSoft, marginBottom: 8 }}>🎤 Mapa da fala</div>
+        <div style={{ fontSize: 12, fontWeight: 700, color: C.inkSoft, marginBottom: 8 }}>🗺️ Mapa do deck (estudo + fala)</div>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
           {terms.map((t, i) => {
             const p = pron[t.key] || 0;
-            const seen = !!introduced[t.key];
+            const studied = !!introduced[t.key]; // já avaliado no SRS (aprendeu, mesmo sem falar)
             const isCurrent = current && current.key === t.key;
-            const bg = p >= 80 ? C.ok : p > 0 ? C.gold : C.paper;
-            const spokenPending = seen && p === 0; // visto mas ainda não falado (ou "pulado")
+            let bg, color, content, borderColor, opacity = 1;
+            if (p >= 80)        { bg = C.ok;     color = "#fff";   content = "✓";     borderColor = C.ok; }      // falou bem
+            else if (p > 0)     { bg = C.gold;   color = "#fff";   content = i + 1;   borderColor = C.gold; }    // falou, melhorar
+            else if (studied)   { bg = C.okSoft; color = C.card;   content = "📖";    borderColor = C.ok; }      // estudado, falta falar
+            else                { bg = C.paper;  color = C.inkSoft; content = i + 1;  borderColor = C.line; opacity = 0.5; } // não aberto
+            const status = p >= 80 ? "falado bem" : p > 0 ? `falado ${p}%` : studied ? "estudado — falta falar" : "não aberto";
             return (
               <button
                 key={t.key}
                 onClick={() => studyOne(t.key)}
-                title={`${t.term} — ${p >= 80 ? "falado bem" : p > 0 ? `falado ${p}%` : spokenPending ? "visto, fala pendente" : "não visto"}`}
+                title={`${t.term} — ${status}`}
                 style={{
                   width: 26, height: 26, borderRadius: 7, fontSize: 11, fontWeight: 700,
-                  border: isCurrent ? `2px solid ${C.card}` : spokenPending ? `1.5px dashed ${C.goldDeep}` : `1.5px solid ${C.line}`,
-                  background: bg,
-                  color: p > 0 ? "#fff" : spokenPending ? C.goldDeep : C.inkSoft,
-                  opacity: seen || p > 0 ? 1 : 0.45,
+                  border: isCurrent ? `2px solid ${C.card}` : `1.5px solid ${borderColor}`,
+                  background: bg, color, opacity,
                 }}
               >
-                {p >= 80 ? "✓" : spokenPending ? "!" : i + 1}
+                {content}
               </button>
             );
           })}
         </div>
-        <div style={{ fontSize: 11, color: C.inkSoft, marginTop: 8, lineHeight: 1.5 }}>
-          <b style={{ color: C.ok }}>✓ verde</b> falou bem (≥80%) · <b style={{ color: C.goldDeep }}>dourado</b> dá pra melhorar · <b style={{ color: C.goldDeep }}>! tracejado</b> visto mas fala pendente · apagado = não visto
+        <div style={{ fontSize: 11, color: C.inkSoft, marginTop: 8, lineHeight: 1.6 }}>
+          <b style={{ color: C.ok }}>✓ verde</b> falou bem (≥80%) · <b style={{ color: C.goldDeep }}>dourado</b> falou, dá pra melhorar · <b style={{ color: C.ok }}>📖 verde-claro</b> estudado, falta falar · apagado = não aberto
+        </div>
+        <div style={{ fontSize: 11, color: C.inkSoft, marginTop: 4, lineHeight: 1.5, fontStyle: "italic" }}>
+          Pode abrir pra estudar agora e falar depois (quando der pra falar em voz alta) — a prova só exige a fala de todos.
         </div>
         {(() => {
           const green = terms.filter((t) => (pron[t.key] || 0) >= 80).length;
+          const studiedCount = terms.filter((t) => !!introduced[t.key]).length;
           const allGreen = green === terms.length;
           return (
             <div style={{ marginTop: 8, fontSize: 12, fontWeight: 700, color: allGreen ? C.ok : C.goldDeep, textAlign: "center" }}>
-              {allGreen ? "🔓 Prova liberada! Todos os termos falados bem." : `🔒 Prova libera com todos verdes — ${green}/${terms.length}`}
+              {allGreen ? "🔓 Prova liberada! Todos os termos falados bem." : `📖 Estudados ${studiedCount}/${terms.length} · 🎤 Falados ${green}/${terms.length} — prova libera com todos verdes`}
             </div>
           );
         })()}
