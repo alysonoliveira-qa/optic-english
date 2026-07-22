@@ -1194,6 +1194,7 @@ function PronTab({ cards, pron, savePron }) {
   const interimRef = useRef("");      // último trecho provisório (rede de segurança)
   const confRef = useRef([]);         // confianças por resultado
   const stopTimerRef = useRef(null);
+  const startFallbackRef = useRef(null);
   const audioUrlRef = useRef(null);
   const myAudioRef = useRef(null);    // <audio> da própria gravação
 
@@ -1208,6 +1209,7 @@ function PronTab({ cards, pron, savePron }) {
     try { if (mediaRef.current && mediaRef.current.state !== "inactive") mediaRef.current.stop(); } catch (e) {}
     try { streamRef.current && streamRef.current.getTracks().forEach((t) => t.stop()); } catch (e) {}
     if (stopTimerRef.current) clearTimeout(stopTimerRef.current);
+    if (startFallbackRef.current) clearTimeout(startFallbackRef.current);
     if (audioUrlRef.current) URL.revokeObjectURL(audioUrlRef.current);
   }, []);
 
@@ -1242,6 +1244,7 @@ function PronTab({ cards, pron, savePron }) {
   // Encerra a captura: para gravação/stream, gera o áudio e pontua o que foi dito.
   const finishListening = (errored) => {
     if (stopTimerRef.current) { clearTimeout(stopTimerRef.current); stopTimerRef.current = null; }
+    if (startFallbackRef.current) { clearTimeout(startFallbackRef.current); startFallbackRef.current = null; }
     setListening(false);
     setStarting(false);
     try { if (mediaRef.current && mediaRef.current.state !== "inactive") mediaRef.current.stop(); } catch (e) {}
@@ -1329,8 +1332,11 @@ function PronTab({ cards, pron, savePron }) {
       setListening(true);
 
       // Só mostra "fale agora" quando o mic realmente engatou — evita cortar o início.
+      // Alguns navegadores não disparam onaudiostart de forma confiável, então há um
+      // fallback que libera o estado depois de 1,2s para o botão Parar nunca travar.
       rec.onaudiostart = () => setStarting(false);
       rec.onspeechstart = () => setStarting(false);
+      startFallbackRef.current = setTimeout(() => setStarting(false), 1200);
 
       rec.onresult = (ev) => {
         let interim = "";
@@ -1353,8 +1359,17 @@ function PronTab({ cards, pron, savePron }) {
           finishListening(true);
         } else if (ev.error === "no-speech") {
           setSrError("Ainda não ouvi nada — chegue mais perto e fale.");
+        } else if (ev.error === "audio-capture") {
+          setSrError("O microfone está ocupado (a gravação e o reconhecedor brigaram por ele). Toque em Falar de novo.");
+        } else if (ev.error === "network") {
+          // Brave (e alguns navegadores) removem o serviço de fala do Google -> erro
+          // "network" imediato. Não adianta repetir: cai no modo gravar + autoavaliar,
+          // que funciona aqui. A nota por voz só roda no Chrome ou Edge.
+          setSrError("Este navegador não faz nota por voz (o Brave bloqueia o serviço de fala do Google). Para a nota automática, use Chrome ou Edge. Aqui você pode gravar, ouvir e se autoavaliar 👇");
+          setSelfMode(true);
+          finishListening(true);
         } else if (ev.error !== "aborted") {
-          setSrError("Erro no reconhecimento de voz. Tente de novo.");
+          setSrError("Erro no reconhecimento de voz (" + ev.error + "). Tente de novo.");
         }
       };
       rec.onend = () => finishListening(false);
@@ -1412,13 +1427,12 @@ function PronTab({ cards, pron, savePron }) {
           {listening ? (
             <button
               onClick={stopListening}
-              disabled={starting}
               style={{
                 border: "none", borderRadius: 10, padding: "11px 18px", fontWeight: 700, fontSize: 14.5,
                 background: starting ? C.goldDeep : C.bad, color: C.cream,
               }}
             >
-              {starting ? "⏳ Preparando…" : "⏹ Parar"}
+              {starting ? "⏳ Preparando… (toque p/ parar)" : "⏹ Parar"}
             </button>
           ) : (
             <button
