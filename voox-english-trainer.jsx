@@ -33,8 +33,8 @@ const LEVELS = [
     id: 1,
     grade: "+0.50",
     name: "Júnior",
-    tag: "Atendimento rápido · ≈300 palavras",
-    desc: "O diálogo completo de uma venda simples: receber, entender, cobrar e se despedir — incluindo o que o cliente fala.",
+    tag: "Atendimento completo de balcão · vocabulário essencial",
+    desc: "Domine o vocabulário e as frases para conduzir um atendimento Júnior inteiro — da recepção à despedida, incluindo o que o cliente fala. Ao fechar a prova, você está apto a atender sozinho.",
     sections: [
       {
         title: "Recepção",
@@ -128,18 +128,27 @@ const LEVELS = [
       ["desconto", "discount"],
     ],
     quiz: [
-      { q: "Como se diz \"atender\" um cliente?", opts: ["to attend", "to help / to assist", "to answer", "to attempt"], a: 1, note: "\"Attend\" em inglês é comparecer a um evento." },
-      { q: "Cliente chega e você está ocupado. O que dizer?", opts: ["\"Wait here!\"", "\"Stay, please.\"", "\"I'll be right with you.\"", "\"I go attend you.\""], a: 2 },
-      { q: "\"Receita\" de óculos em inglês:", opts: ["recipe", "receipt", "prescription", "prescript"], a: 2, note: "Recipe = receita de comida. Receipt = comprovante." },
-      { q: "\"Armação\" em inglês:", opts: ["armor", "structure", "frame", "border"], a: 2 },
-      { q: "\"Como gostaria de pagar?\"", opts: ["\"How you want pay?\"", "\"How would you like to pay?\"", "\"What is your pay?\"", "\"Which money you use?\""], a: 1 },
-      { q: "\"Comprovante\" em inglês:", opts: ["receipt", "recipe", "prove", "comprovant"], a: 0 },
-      { q: "Melhor despedida para o cliente:", opts: ["\"Thanks for your preference!\"", "\"Thank you for choosing us!\"", "\"Thanks for prefer us!\"", "\"Good preference!\""], a: 1, note: "\"Thanks for your preference\" é tradução literal — não é natural." },
-      { q: "\"Seus óculos ficarão prontos na sexta.\"", opts: ["\"Your glasses will be ready on Friday.\"", "\"Your glasses stay ready Friday.\"", "\"Your glasses are prompt on Friday.\"", "\"Your glasses will ready in Friday.\""], a: 0 },
-      { q: "\"Posso ver seus óculos?\"", opts: ["\"Can I look your glasses?\"", "\"May I see your glasses?\"", "\"Give me your glasses?\"", "\"I can see your glasses?\""], a: 1 },
-      { q: "\"Débito ou crédito?\"", opts: ["\"Debit or credit?\"", "\"Debt or credit?\"", "\"Debit card or credit money?\"", "\"Direct or credit?\""], a: 0, note: "Cuidado: \"debt\" (dívida) tem pronúncia parecida." },
-      { q: "Cliente diz: \"Do you take installments?\" — o que ele quer saber?", opts: ["Se tem entrega", "Se pode parcelar", "Se aceita troca", "Se tem garantia"], a: 1 },
-      { q: "Cliente diz: \"Sorry, can you speak more slowly?\" — o que fazer?", opts: ["Repetir mais alto", "Falar mais devagar", "Chamar outro vendedor", "Trocar para português"], a: 1 },
+      // Prova situacional que certifica um atendimento Júnior completo, etapa por etapa.
+      { q: "Um cliente entra e você ainda está terminando outro atendimento. O que dizer?", opts: ["\"Wait there!\"", "\"I'll be right with you.\"", "\"I go attend you.\"", "\"Stay, please.\""], a: 1, note: "\"To attend\" é comparecer a um evento; atender = to help / to assist." },
+      { q: "São 15h e um cliente entra na loja. Como você recebe?", opts: ["\"Good night! Welcome.\"", "\"Good afternoon! Welcome. How can I help you?\"", "\"Good morning! What you want?\"", "\"Hi, we close now.\""], a: 1 },
+      { q: "Você quer deixar o cliente à vontade enquanto busca as opções.", opts: ["\"Sit down now.\"", "\"Please, have a seat. Would you like some water?\"", "\"You rest there.\"", "\"Give me a moment to sit.\""], a: 1 },
+      { q: "Você quer entender para que ele vai usar os óculos.", opts: ["\"Why you need glasses?\"", "\"What will you use them for?\"", "\"For what is the glasses?\"", "\"What glasses do?\""], a: 1 },
+      { q: "Hora do cadastro. Como você pede o nome soletrado?", opts: ["\"Spell your name now.\"", "\"Could you spell your name, please?\"", "\"How write your name?\"", "\"Say your name letters.\""], a: 1 },
+      { q: "Você precisa do contato do cliente.", opts: ["\"What's your phone number?\"", "\"Give me your phone.\"", "\"Which is your number phone?\"", "\"Your contact is what?\""], a: 0 },
+      { q: "Ele não tem a receita, mas trouxe os óculos antigos. O que oferecer?", opts: ["\"Sorry, come back with the recipe.\"", "\"I can copy the prescription from your old lenses.\"", "\"I can make the receipt from your glasses.\"", "\"You need a new recipe first.\""], a: 1, note: "Receita óptica = prescription (recipe = receita de comida; receipt = comprovante)." },
+      { q: "O cliente gostou de uma armação. Como convida a experimentar?", opts: ["\"Would you like to try it on?\"", "\"You want experiment this?\"", "\"Do you prove it?\"", "\"Try it in your face?\""], a: 0, note: "Experimentar (óculos/roupa) = to try on. \"To prove\" é provar/comprovar." },
+      { q: "O cliente passa o dia no computador. O que recomendar?", opts: ["\"These lenses are for the sun only.\"", "\"These lenses filter blue light from screens.\"", "\"You don't need lenses for that.\"", "\"Buy sunglasses for the computer.\""], a: 1 },
+      { q: "Você quer oferecer o tratamento antirreflexo.", opts: ["\"Do you want mirror lenses?\"", "\"Would you like anti-reflective coating?\"", "\"You need reflective glass?\"", "\"Want the reflection lenses?\""], a: 1 },
+      { q: "Ao provar, ele diz: \"They feel a little too tight.\" O que você faz?", opts: ["Pede pra ele comprar um maior", "\"I can adjust them for you.\"", "Diz que é normal e ignora", "Diz que não dá pra fazer nada"], a: 1 },
+      { q: "Ele pergunta o preço. Como responder o valor total?", opts: ["\"The price of it.\"", "\"The total is five hundred reais.\"", "\"It costs much money.\"", "\"Five hundred is the receipt.\""], a: 1 },
+      { q: "Na hora de fechar, como pergunta a forma de pagamento?", opts: ["\"How you pay?\"", "\"How would you like to pay?\"", "\"What money you use?\"", "\"Which is your pay?\""], a: 1 },
+      { q: "O cliente pergunta: \"Do you take installments?\" — o que ele quer saber?", opts: ["Se tem entrega", "Se pode parcelar", "Se aceita troca", "Se tem garantia"], a: 1 },
+      { q: "Ele acha o valor alto. Qual a melhor resposta?", opts: ["\"It's not expensive.\"", "\"I understand. We have a cheaper option here.\"", "\"Then don't buy it.\"", "\"Everything is expensive.\""], a: 1 },
+      { q: "Ele diz: \"I need to think about it.\" Boa resposta?", opts: ["\"You must decide now.\"", "\"No problem. Take your time.\"", "\"Why you don't want?\"", "\"The promotion ends today.\""], a: 1 },
+      { q: "Como você informa o prazo de entrega?", opts: ["\"They'll be ready in three days.\"", "\"They stay ready three days.\"", "\"In three days they prompt.\"", "\"Ready will be three days.\""], a: 0 },
+      { q: "Cliente: \"My glasses are broken.\" Melhor resposta?", opts: ["\"That's your problem.\"", "\"I'm sorry about that. We can repair them for you.\"", "\"Buy a new one.\"", "\"We don't fix glasses.\""], a: 1 },
+      { q: "Cliente: \"Sorry, can you speak more slowly?\" — o que fazer?", opts: ["Repetir mais alto", "Falar mais devagar", "Chamar outro vendedor", "Trocar para português"], a: 1 },
+      { q: "Melhor despedida ao final da venda?", opts: ["\"Thanks for your preference!\"", "\"Thank you for choosing us! Have a great day.\"", "\"Thanks for prefer us.\"", "\"Good preference, bye.\""], a: 1, note: "\"Thanks for your preference\" é tradução literal — não soa natural." },
     ],
   },
   {
@@ -488,6 +497,324 @@ const RATINGS = [
   { label: "Muito fácil", sub: "4 dias", color: "#2E6E4E", interval: 4 * 24 * 60 * 60 * 1000 },
 ];
 
+// ===================== META DO DIA (ritmo da Fase 1) =====================
+// Faixas do slider de termos NOVOS por dia. 300 termos ÷ 10/dia ≈ 30 dias.
+const PACE_STOPS = [
+  { v: 6,  label: "Rápido",      hint: "dose leve · ~50 dias" },
+  { v: 8,  label: "Equilibrado", hint: "constante · ~38 dias" },
+  { v: 10, label: "Ideal",       hint: "recomendado · ~30 dias" },
+  { v: 12, label: "Arrojado",    hint: "puxado · ~25 dias" },
+  { v: 15, label: "Lendário",    hint: "no limite · ~20 dias" },
+];
+const DEFAULT_DAILY = { pace: 10, streak: 0, bestStreak: 0, lastGoalDay: null, introduced: {} };
+
+const ymd = (d) => {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+};
+const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+
+// ===================== TERMOS DA FASE 1 (deck híbrido) =====================
+// Vocabulário BÁSICO DE BALCÃO da ótica, cada termo ancorado numa frase curta de
+// atendimento. Organizado por tema. role: "you" = vendedor · "cust" = cliente.
+// Fase B em andamento: escalando até ~300. Mantenha frases curtas e naturais.
+const FASE1_TERMS = [
+  // ————— Recepção / Cumprimentos —————
+  { key: "f1-rec-welcome",   theme: "Recepção",   role: "you",  term: "welcome",        termPt: "bem-vindo(a)",        phrase: "Welcome! How can I help you?",            phrasePt: "Bem-vindo! Como posso ajudar?" },
+  { key: "f1-rec-help",      theme: "Recepção",   role: "you",  term: "to help",        termPt: "ajudar",              phrase: "How can I help you today?",               phrasePt: "Como posso te ajudar hoje?" },
+  { key: "f1-rec-morning",   theme: "Recepção",   role: "you",  term: "good morning",   termPt: "bom dia",             phrase: "Good morning! Welcome to our store.",     phrasePt: "Bom dia! Bem-vindo à nossa loja." },
+  { key: "f1-rec-afternoon", theme: "Recepção",   role: "you",  term: "good afternoon", termPt: "boa tarde",           phrase: "Good afternoon! Come in, please.",        phrasePt: "Boa tarde! Entre, por favor." },
+  { key: "f1-rec-comein",    theme: "Recepção",   role: "you",  term: "to come in",     termPt: "entrar",              phrase: "Please, come in and take a look.",        phrasePt: "Por favor, entre e dê uma olhada." },
+  { key: "f1-rec-course",    theme: "Recepção",   role: "you",  term: "of course",      termPt: "claro / com certeza", phrase: "Of course! I'll be right with you.",      phrasePt: "Claro! Já vou te atender." },
+  { key: "f1-rec-moment",    theme: "Recepção",   role: "you",  term: "one moment",     termPt: "um momento",          phrase: "One moment, please.",                     phrasePt: "Um momento, por favor." },
+  { key: "f1-rec-name",      theme: "Recepção",   role: "you",  term: "your name",      termPt: "seu nome",            phrase: "Could you tell me your name, please?",    phrasePt: "Pode me dizer seu nome, por favor?" },
+  { key: "f1-rec-english",   theme: "Recepção",   role: "cust", term: "to speak English", termPt: "falar inglês",      phrase: "Do you speak English?",                   phrasePt: "Você fala inglês?" },
+  { key: "f1-rec-alittle",   theme: "Recepção",   role: "you",  term: "a little",       termPt: "um pouco",            phrase: "A little, yes! How can I help?",          phrasePt: "Um pouco, sim! Como posso ajudar?" },
+
+  // ————— Descobrindo a necessidade —————
+  { key: "f1-need-look",     theme: "Necessidade", role: "you", term: "to look for",    termPt: "procurar",            phrase: "What are you looking for today?",         phrasePt: "O que você procura hoje?" },
+  { key: "f1-need-glasses",  theme: "Necessidade", role: "cust", term: "glasses",       termPt: "óculos",              phrase: "I'm looking for new glasses.",            phrasePt: "Estou procurando óculos novos." },
+  { key: "f1-need-sun",      theme: "Necessidade", role: "you", term: "sunglasses",     termPt: "óculos de sol",       phrase: "Glasses or sunglasses?",                  phrasePt: "Óculos de grau ou de sol?" },
+  { key: "f1-need-reading",  theme: "Necessidade", role: "you", term: "reading glasses", termPt: "óculos de leitura",  phrase: "Do you need reading glasses?",            phrasePt: "Você precisa de óculos de leitura?" },
+  { key: "f1-need-presc",    theme: "Necessidade", role: "you", term: "prescription",   termPt: "receita / grau",      phrase: "Do you have your prescription?",          phrasePt: "Você tem sua receita?" },
+  { key: "f1-need-old",      theme: "Necessidade", role: "cust", term: "old glasses",   termPt: "óculos antigos",      phrase: "I have my old glasses with me.",          phrasePt: "Tenho meus óculos antigos comigo." },
+  { key: "f1-need-see",      theme: "Necessidade", role: "you", term: "may I see",      termPt: "posso ver",           phrase: "May I see your glasses?",                 phrasePt: "Posso ver seus óculos?" },
+  { key: "f1-need-forwhat",  theme: "Necessidade", role: "you", term: "to use for",     termPt: "usar para",           phrase: "What will you use them for?",             phrasePt: "Você vai usar para quê?" },
+  { key: "f1-need-driving",  theme: "Necessidade", role: "cust", term: "for driving",   termPt: "para dirigir",        phrase: "Mostly for driving.",                     phrasePt: "Principalmente para dirigir." },
+  { key: "f1-need-computer", theme: "Necessidade", role: "cust", term: "for the computer", termPt: "para o computador", phrase: "I need them for the computer.",          phrasePt: "Preciso deles para o computador." },
+
+  // ————— Armação —————
+  { key: "f1-frame-frame",   theme: "Armação",    role: "you",  term: "frame",          termPt: "armação",             phrase: "This frame looks great on you.",          phrasePt: "Essa armação ficou ótima em você." },
+  { key: "f1-frame-fit",     theme: "Armação",    role: "you",  term: "to fit",         termPt: "servir / encaixar",   phrase: "This frame fits you very well.",          phrasePt: "Essa armação te serve muito bem." },
+  { key: "f1-frame-light",   theme: "Armação",    role: "you",  term: "lightweight",    termPt: "leve",                phrase: "This frame is very lightweight.",         phrasePt: "Essa armação é bem leve." },
+  { key: "f1-frame-color",   theme: "Armação",    role: "you",  term: "color",          termPt: "cor",                 phrase: "We have this frame in other colors.",     phrasePt: "Temos essa armação em outras cores." },
+  { key: "f1-frame-size",    theme: "Armação",    role: "you",  term: "size",           termPt: "tamanho",             phrase: "What size do you usually wear?",          phrasePt: "Que tamanho você costuma usar?" },
+  { key: "f1-frame-round",   theme: "Armação",    role: "you",  term: "round",          termPt: "redonda",             phrase: "Do you prefer round or square frames?",   phrasePt: "Você prefere armação redonda ou quadrada?" },
+  { key: "f1-frame-metal",   theme: "Armação",    role: "you",  term: "metal",          termPt: "metal",               phrase: "This frame is made of metal.",            phrasePt: "Essa armação é de metal." },
+  { key: "f1-frame-acetate", theme: "Armação",    role: "you",  term: "acetate",        termPt: "acetato",             phrase: "This one is acetate, very comfortable.",  phrasePt: "Essa é de acetato, bem confortável." },
+  { key: "f1-frame-try",     theme: "Armação",    role: "you",  term: "to try on",      termPt: "experimentar",        phrase: "Would you like to try it on?",            phrasePt: "Gostaria de experimentar?" },
+  { key: "f1-frame-mirror",  theme: "Armação",    role: "you",  term: "mirror",         termPt: "espelho",             phrase: "The mirror is right here.",               phrasePt: "O espelho está bem aqui." },
+  { key: "f1-frame-suit",    theme: "Armação",    role: "you",  term: "to suit",        termPt: "cair bem / combinar", phrase: "This shape really suits your face.",       phrasePt: "Esse formato cai muito bem no seu rosto." },
+
+  // ————— Lentes —————
+  { key: "f1-lens-lens",     theme: "Lentes",     role: "you",  term: "lens",           termPt: "lente",               phrase: "This lens is very thin and light.",       phrasePt: "Essa lente é bem fina e leve." },
+  { key: "f1-lens-ready",    theme: "Lentes",     role: "you",  term: "lenses",         termPt: "lentes (par)",        phrase: "Your lenses are ready.",                  phrasePt: "Suas lentes estão prontas." },
+  { key: "f1-lens-thin",     theme: "Lentes",     role: "you",  term: "thin",           termPt: "fina",                phrase: "We can make the lenses thinner.",         phrasePt: "Podemos deixar as lentes mais finas." },
+  { key: "f1-lens-single",   theme: "Lentes",     role: "you",  term: "single vision",  termPt: "visão simples",       phrase: "These are single vision lenses.",         phrasePt: "Essas são lentes de visão simples." },
+  { key: "f1-lens-progr",    theme: "Lentes",     role: "you",  term: "progressive",    termPt: "multifocal",          phrase: "Do you need progressive lenses?",         phrasePt: "Você precisa de lentes multifocais?" },
+  { key: "f1-lens-clean",    theme: "Lentes",     role: "you",  term: "to clean",       termPt: "limpar",              phrase: "Clean the lenses with this cloth.",       phrasePt: "Limpe as lentes com este paninho." },
+  { key: "f1-lens-cloth",    theme: "Lentes",     role: "you",  term: "cleaning cloth", termPt: "paninho de limpeza",  phrase: "Here's a cleaning cloth for you.",        phrasePt: "Aqui está um paninho de limpeza para você." },
+  { key: "f1-lens-clear",    theme: "Lentes",     role: "you",  term: "clear",          termPt: "transparente / nítida", phrase: "Your vision will be much clearer.",      phrasePt: "Sua visão vai ficar bem mais nítida." },
+
+  // ————— Tratamentos —————
+  { key: "f1-coat-coating",  theme: "Tratamentos", role: "you", term: "coating",        termPt: "tratamento / camada", phrase: "Would you like anti-reflective coating?", phrasePt: "Gostaria de tratamento antirreflexo?" },
+  { key: "f1-coat-antiref",  theme: "Tratamentos", role: "you", term: "anti-reflective", termPt: "antirreflexo",       phrase: "Anti-reflective lenses reduce glare.",    phrasePt: "Lentes antirreflexo reduzem o reflexo." },
+  { key: "f1-coat-blue",     theme: "Tratamentos", role: "you", term: "blue light",     termPt: "luz azul",            phrase: "These lenses filter blue light from screens.", phrasePt: "Essas lentes filtram a luz azul das telas." },
+  { key: "f1-coat-scratch",  theme: "Tratamentos", role: "you", term: "scratch-resistant", termPt: "antirrisco",       phrase: "The coating is scratch-resistant.",       phrasePt: "O tratamento é antirrisco." },
+  { key: "f1-coat-photo",    theme: "Tratamentos", role: "you", term: "photochromic",   termPt: "fotossensível",       phrase: "Photochromic lenses darken in the sun.",  phrasePt: "Lentes fotossensíveis escurecem no sol." },
+  { key: "f1-coat-uv",       theme: "Tratamentos", role: "you", term: "UV protection",  termPt: "proteção UV",         phrase: "These lenses have full UV protection.",   phrasePt: "Essas lentes têm proteção UV total." },
+  { key: "f1-coat-glare",    theme: "Tratamentos", role: "you", term: "glare",          termPt: "reflexo / ofuscamento", phrase: "This coating cuts glare at night.",     phrasePt: "Esse tratamento reduz o reflexo à noite." },
+
+  // ————— Receita / Grau —————
+  { key: "f1-presc-degree",  theme: "Receita",    role: "cust", term: "degree",         termPt: "grau",                phrase: "My degree is a little strong.",           phrasePt: "Meu grau é um pouco forte." },
+  { key: "f1-presc-eye",     theme: "Receita",    role: "you",  term: "eye exam",       termPt: "exame de vista",      phrase: "When was your last eye exam?",            phrasePt: "Quando foi seu último exame de vista?" },
+  { key: "f1-presc-doctor",  theme: "Receita",    role: "you",  term: "eye doctor",     termPt: "oftalmologista",      phrase: "You should see an eye doctor first.",     phrasePt: "Você deveria ver um oftalmologista primeiro." },
+  { key: "f1-presc-updated", theme: "Receita",    role: "you",  term: "up to date",     termPt: "atualizada / em dia", phrase: "Is your prescription up to date?",        phrasePt: "Sua receita está atualizada?" },
+  { key: "f1-presc-far",     theme: "Receita",    role: "cust", term: "farsighted",     termPt: "hipermetrope",        phrase: "I'm a little farsighted.",                phrasePt: "Sou um pouco hipermetrope." },
+  { key: "f1-presc-near",    theme: "Receita",    role: "cust", term: "nearsighted",    termPt: "míope",               phrase: "I'm nearsighted, I can't see far.",       phrasePt: "Sou míope, não enxergo de longe." },
+
+  // ————— Provar / Ajuste —————
+  { key: "f1-try-look",      theme: "Provar",     role: "cust", term: "how do I look",  termPt: "como eu fiquei",      phrase: "How do I look with these?",               phrasePt: "Como eu fiquei com esses?" },
+  { key: "f1-try-comfort",   theme: "Provar",     role: "you",  term: "comfortable",    termPt: "confortável",         phrase: "Are they comfortable on your nose?",      phrasePt: "Está confortável no seu nariz?" },
+  { key: "f1-try-tight",     theme: "Provar",     role: "cust", term: "too tight",      termPt: "muito apertado",      phrase: "They feel a little too tight.",           phrasePt: "Estão um pouco apertados." },
+  { key: "f1-try-adjust",    theme: "Provar",     role: "you",  term: "to adjust",      termPt: "ajustar",             phrase: "I can adjust them for you.",              phrasePt: "Posso ajustar para você." },
+  { key: "f1-try-loose",     theme: "Provar",     role: "you",  term: "loose",          termPt: "frouxo / solto",      phrase: "If they feel loose, come back.",          phrasePt: "Se ficarem frouxos, volte aqui." },
+
+  // ————— Preço e pagamento —————
+  { key: "f1-pay-howmuch",   theme: "Pagamento",  role: "cust", term: "how much",       termPt: "quanto custa",        phrase: "How much is this one?",                   phrasePt: "Quanto custa este?" },
+  { key: "f1-pay-total",     theme: "Pagamento",  role: "you",  term: "total",          termPt: "total",               phrase: "The total is five hundred reais.",        phrasePt: "O total é quinhentos reais." },
+  { key: "f1-pay-price",     theme: "Pagamento",  role: "you",  term: "price",          termPt: "preço",               phrase: "The price includes the lenses.",          phrasePt: "O preço já inclui as lentes." },
+  { key: "f1-pay-card",      theme: "Pagamento",  role: "cust", term: "to pay by card", termPt: "pagar no cartão",     phrase: "Can I pay by card?",                      phrasePt: "Posso pagar no cartão?" },
+  { key: "f1-pay-debit",     theme: "Pagamento",  role: "you",  term: "debit or credit", termPt: "débito ou crédito",  phrase: "Debit or credit?",                        phrasePt: "Débito ou crédito?" },
+  { key: "f1-pay-cash",      theme: "Pagamento",  role: "you",  term: "cash",           termPt: "dinheiro / à vista",  phrase: "Do you have a discount for cash?",        phrasePt: "Tem desconto à vista?" },
+  { key: "f1-pay-install",   theme: "Pagamento",  role: "cust", term: "installments",   termPt: "parcelas",            phrase: "Do you take installments?",               phrasePt: "Vocês parcelam?" },
+  { key: "f1-pay-discount",  theme: "Pagamento",  role: "you",  term: "discount",       termPt: "desconto",            phrase: "I can give you a small discount.",        phrasePt: "Posso te dar um pequeno desconto." },
+  { key: "f1-pay-receipt",   theme: "Pagamento",  role: "you",  term: "receipt",        termPt: "comprovante",         phrase: "Here's your receipt.",                    phrasePt: "Aqui está seu comprovante." },
+
+  // ————— Prazo e entrega —————
+  { key: "f1-del-ready",     theme: "Entrega",    role: "you",  term: "to be ready",    termPt: "ficar pronto",        phrase: "They'll be ready in three days.",         phrasePt: "Ficam prontos em três dias." },
+  { key: "f1-del-pickup",    theme: "Entrega",    role: "you",  term: "to pick up",     termPt: "retirar / buscar",    phrase: "You can pick them up on Friday.",         phrasePt: "Você pode retirar na sexta." },
+  { key: "f1-del-call",      theme: "Entrega",    role: "you",  term: "to call",        termPt: "ligar / avisar",      phrase: "We'll call you when they're ready.",      phrasePt: "A gente te liga quando ficarem prontos." },
+  { key: "f1-del-wait",      theme: "Entrega",    role: "cust", term: "to wait",        termPt: "esperar",             phrase: "How long do I have to wait?",             phrasePt: "Quanto tempo eu preciso esperar?" },
+
+  // ————— Problemas / Troca / Garantia —————
+  { key: "f1-prob-warranty", theme: "Garantia",   role: "you",  term: "warranty",       termPt: "garantia",            phrase: "The frame has a one-year warranty.",      phrasePt: "A armação tem um ano de garantia." },
+  { key: "f1-prob-exchange", theme: "Garantia",   role: "you",  term: "to exchange",    termPt: "trocar",              phrase: "You can exchange them within seven days.", phrasePt: "Você pode trocar em até sete dias." },
+  { key: "f1-prob-broken",   theme: "Garantia",   role: "cust", term: "broken",         termPt: "quebrado",            phrase: "My glasses are broken.",                  phrasePt: "Meus óculos estão quebrados." },
+  { key: "f1-prob-repair",   theme: "Garantia",   role: "you",  term: "to repair",      termPt: "consertar",           phrase: "We can repair them for you.",             phrasePt: "Podemos consertar para você." },
+  { key: "f1-prob-sorry",    theme: "Garantia",   role: "you",  term: "I'm sorry",      termPt: "sinto muito",         phrase: "I'm sorry about that. Let me help.",      phrasePt: "Sinto muito por isso. Deixa eu ajudar." },
+
+  // ————— Small talk / rapport —————
+  { key: "f1-st-howareyou",  theme: "Small talk", role: "you",  term: "how are you",    termPt: "como vai",            phrase: "Hello! How are you today?",               phrasePt: "Olá! Como vai você hoje?" },
+  { key: "f1-st-meet",       theme: "Small talk", role: "you",  term: "nice to meet you", termPt: "prazer em conhecer", phrase: "Nice to meet you!",                       phrasePt: "Prazer em te conhecer!" },
+  { key: "f1-st-seat",       theme: "Small talk", role: "you",  term: "to have a seat", termPt: "sentar-se",           phrase: "Please, have a seat.",                    phrasePt: "Por favor, sente-se." },
+  { key: "f1-st-water",      theme: "Small talk", role: "you",  term: "water",          termPt: "água",                phrase: "Would you like some water?",              phrasePt: "Aceita uma água?" },
+  { key: "f1-st-niceday",    theme: "Small talk", role: "you",  term: "nice day",       termPt: "dia bom",             phrase: "It's a nice day, isn't it?",              phrasePt: "Está um dia bom, não é?" },
+
+  // ————— Cadastro e contato —————
+  { key: "f1-reg-spell",     theme: "Cadastro",   role: "you",  term: "to spell",       termPt: "soletrar",            phrase: "Could you spell your name, please?",      phrasePt: "Pode soletrar seu nome, por favor?" },
+  { key: "f1-reg-phone",     theme: "Cadastro",   role: "you",  term: "phone number",   termPt: "número de telefone",  phrase: "What's your phone number?",               phrasePt: "Qual é o seu telefone?" },
+  { key: "f1-reg-whats",     theme: "Cadastro",   role: "you",  term: "WhatsApp",       termPt: "WhatsApp",            phrase: "Can I send it to your WhatsApp?",         phrasePt: "Posso enviar no seu WhatsApp?" },
+  { key: "f1-reg-address",   theme: "Cadastro",   role: "you",  term: "address",        termPt: "endereço",            phrase: "What's your address?",                    phrasePt: "Qual é o seu endereço?" },
+  { key: "f1-reg-email",     theme: "Cadastro",   role: "you",  term: "email",          termPt: "e-mail",              phrase: "Could I have your email, please?",        phrasePt: "Pode me passar seu e-mail?" },
+  { key: "f1-reg-register",  theme: "Cadastro",   role: "you",  term: "to register",    termPt: "cadastrar",           phrase: "Let me register your information.",       phrasePt: "Deixa eu fazer seu cadastro." },
+
+  // ————— Segunda via e exame —————
+  { key: "f1-copy-copy",     theme: "Segunda via", role: "you", term: "to copy",        termPt: "copiar",              phrase: "I can copy the prescription from your old lenses.", phrasePt: "Posso copiar o grau das suas lentes antigas." },
+  { key: "f1-copy-measure",  theme: "Segunda via", role: "you", term: "to measure",     termPt: "medir",               phrase: "Let me measure your current lenses.",     phrasePt: "Deixa eu medir suas lentes atuais." },
+  { key: "f1-copy-schedule", theme: "Segunda via", role: "you", term: "to schedule",    termPt: "agendar",             phrase: "Would you like to schedule an eye test?", phrasePt: "Gostaria de agendar um exame de vista?" },
+  { key: "f1-copy-appt",     theme: "Segunda via", role: "you", term: "appointment",    termPt: "horário / consulta",  phrase: "Your appointment is at three.",           phrasePt: "Seu horário é às três." },
+  { key: "f1-copy-free",     theme: "Segunda via", role: "you", term: "free",           termPt: "gratuito / de graça", phrase: "We offer a free eye test.",               phrasePt: "Oferecemos um exame de vista grátis." },
+
+  // ————— Acessórios —————
+  { key: "f1-acc-case",      theme: "Acessórios", role: "you",  term: "case",           termPt: "estojo",              phrase: "The case comes with the glasses.",        phrasePt: "O estojo vem junto com os óculos." },
+  { key: "f1-acc-strap",     theme: "Acessórios", role: "you",  term: "strap",          termPt: "cordinha",            phrase: "Would you like a strap for the kids?",    phrasePt: "Quer uma cordinha para as crianças?" },
+  { key: "f1-acc-spray",     theme: "Acessórios", role: "you",  term: "lens spray",     termPt: "spray de limpeza",    phrase: "Use this spray to clean the lenses.",     phrasePt: "Use este spray para limpar as lentes." },
+  { key: "f1-acc-kit",       theme: "Acessórios", role: "you",  term: "cleaning kit",   termPt: "kit de limpeza",      phrase: "This kit has a cloth and a spray.",       phrasePt: "Este kit tem um paninho e um spray." },
+  { key: "f1-acc-extra",     theme: "Acessórios", role: "you",  term: "extra pair",     termPt: "par extra",           phrase: "Do you want an extra pair?",              phrasePt: "Quer um par extra?" },
+
+  // ————— Crianças e esporte —————
+  { key: "f1-kid-kids",      theme: "Crianças",   role: "you",  term: "kids' glasses",  termPt: "óculos infantil",     phrase: "We have kids' glasses too.",              phrasePt: "Temos óculos infantil também." },
+  { key: "f1-kid-flex",      theme: "Crianças",   role: "you",  term: "flexible",       termPt: "flexível",            phrase: "This frame is flexible and safe for children.", phrasePt: "Essa armação é flexível e segura para crianças." },
+  { key: "f1-kid-resist",    theme: "Crianças",   role: "you",  term: "resistant",      termPt: "resistente",          phrase: "It's very resistant to falls.",           phrasePt: "É bem resistente a quedas." },
+  { key: "f1-kid-sport",     theme: "Crianças",   role: "you",  term: "sports glasses", termPt: "óculos esportivo",    phrase: "Do you need sports glasses?",             phrasePt: "Você precisa de óculos esportivo?" },
+  { key: "f1-kid-polar",     theme: "Crianças",   role: "you",  term: "polarized",      termPt: "polarizada",          phrase: "Polarized lenses are great for driving.", phrasePt: "Lentes polarizadas são ótimas para dirigir." },
+
+  // ————— Objeção de preço —————
+  { key: "f1-obj-expensive", theme: "Objeções",   role: "cust", term: "expensive",      termPt: "caro",                phrase: "That's a bit expensive for me.",          phrasePt: "Está um pouco caro para mim." },
+  { key: "f1-obj-budget",    theme: "Objeções",   role: "you",  term: "budget",         termPt: "orçamento (limite)",  phrase: "What's your budget?",                     phrasePt: "Qual é o seu orçamento?" },
+  { key: "f1-obj-cheaper",   theme: "Objeções",   role: "you",  term: "cheaper",        termPt: "mais barato",         phrase: "We have a cheaper option here.",          phrasePt: "Temos uma opção mais barata aqui." },
+  { key: "f1-obj-think",     theme: "Objeções",   role: "cust", term: "to think about it", termPt: "pensar a respeito", phrase: "I need to think about it.",              phrasePt: "Preciso pensar a respeito." },
+  { key: "f1-obj-another",   theme: "Objeções",   role: "you",  term: "another option", termPt: "outra opção",         phrase: "Let me show you another option.",         phrasePt: "Deixa eu te mostrar outra opção." },
+  { key: "f1-obj-worth",     theme: "Objeções",   role: "you",  term: "worth it",       termPt: "vale a pena",         phrase: "For daily use, it's worth it.",           phrasePt: "Para o dia a dia, vale a pena." },
+
+  // ————— Recomendação / venda —————
+  { key: "f1-sell-recommend", theme: "Recomendação", role: "you", term: "to recommend", termPt: "recomendar",          phrase: "I recommend these lenses for you.",       phrasePt: "Eu recomendo essas lentes para você." },
+  { key: "f1-sell-best",     theme: "Recomendação", role: "you",  term: "the best",      termPt: "o melhor",            phrase: "This is our best option.",                phrasePt: "Essa é a nossa melhor opção." },
+  { key: "f1-sell-protect",  theme: "Recomendação", role: "you",  term: "to protect",    termPt: "proteger",            phrase: "These lenses protect your eyes.",         phrasePt: "Essas lentes protegem seus olhos." },
+  { key: "f1-sell-lookgood", theme: "Recomendação", role: "you",  term: "to look good",  termPt: "ficar bem",           phrase: "You look good in these!",                 phrasePt: "Você fica bem com esses!" },
+  { key: "f1-sell-show",     theme: "Recomendação", role: "you",  term: "to show",       termPt: "mostrar",             phrase: "Let me show you some options.",           phrasePt: "Deixa eu te mostrar algumas opções." },
+  { key: "f1-sell-prefer",   theme: "Recomendação", role: "you",  term: "to prefer",     termPt: "preferir",            phrase: "Which one do you prefer?",                phrasePt: "Qual você prefere?" },
+  { key: "f1-sell-choose",   theme: "Recomendação", role: "you",  term: "to choose",     termPt: "escolher",            phrase: "Take your time to choose.",               phrasePt: "Fique à vontade para escolher." },
+
+  // ————— Confirmar entendimento —————
+  { key: "f1-conf-under",    theme: "Confirmar",  role: "you",  term: "to understand",  termPt: "entender",            phrase: "Did you understand everything?",          phrasePt: "Você entendeu tudo?" },
+  { key: "f1-conf-repeat",   theme: "Confirmar",  role: "you",  term: "to repeat",      termPt: "repetir",             phrase: "Let me repeat, please.",                  phrasePt: "Deixa eu repetir, por favor." },
+  { key: "f1-conf-clear",    theme: "Confirmar",  role: "you",  term: "clear",          termPt: "claro / compreensível", phrase: "Is that clear for you?",                phrasePt: "Ficou claro para você?" },
+  { key: "f1-conf-noproblem", theme: "Confirmar", role: "you",  term: "no problem",     termPt: "sem problema",        phrase: "No problem, I can explain again.",        phrasePt: "Sem problema, posso explicar de novo." },
+
+  // ————— Datas e prazo —————
+  { key: "f1-date-today",    theme: "Datas",      role: "you",  term: "today",          termPt: "hoje",                phrase: "It can be ready today.",                  phrasePt: "Pode ficar pronto hoje." },
+  { key: "f1-date-tomorrow", theme: "Datas",      role: "you",  term: "tomorrow",       termPt: "amanhã",              phrase: "Come back tomorrow, please.",             phrasePt: "Volte amanhã, por favor." },
+  { key: "f1-date-days",     theme: "Datas",      role: "you",  term: "days",           termPt: "dias",                phrase: "It takes about three days.",              phrasePt: "Leva uns três dias." },
+  { key: "f1-date-week",     theme: "Datas",      role: "you",  term: "next week",      termPt: "semana que vem",      phrase: "It'll be ready next week.",               phrasePt: "Fica pronto semana que vem." },
+  { key: "f1-date-howlong",  theme: "Datas",      role: "cust", term: "how long",       termPt: "quanto tempo",        phrase: "How long does it take?",                  phrasePt: "Quanto tempo leva?" },
+
+  // ————— Uso e cuidado —————
+  { key: "f1-care-usedto",   theme: "Cuidado",    role: "you",  term: "to get used to", termPt: "se acostumar",        phrase: "You'll get used to them in a few days.",  phrasePt: "Você se acostuma em poucos dias." },
+  { key: "f1-care-avoid",    theme: "Cuidado",    role: "you",  term: "to avoid",       termPt: "evitar",              phrase: "Avoid cleaning them with your shirt.",    phrasePt: "Evite limpar com a camiseta." },
+  { key: "f1-care-warm",     theme: "Cuidado",    role: "you",  term: "warm water",     termPt: "água morna",          phrase: "Wash them with warm water.",              phrasePt: "Lave com água morna." },
+  { key: "f1-care-careful",  theme: "Cuidado",    role: "you",  term: "carefully",      termPt: "com cuidado",         phrase: "Handle the lenses carefully.",            phrasePt: "Manuseie as lentes com cuidado." },
+
+  // ————— Pagamento (extra) —————
+  { key: "f1-pay-pix",       theme: "Pagamento",  role: "you",  term: "Pix",            termPt: "Pix",                 phrase: "You can also pay with Pix.",              phrasePt: "Você também pode pagar no Pix." },
+  { key: "f1-pay-change",    theme: "Pagamento",  role: "you",  term: "change",         termPt: "troco",               phrase: "Here's your change.",                     phrasePt: "Aqui está seu troco." },
+
+  // ————— Despedida —————
+  { key: "f1-bye-thanks",    theme: "Despedida",  role: "you",  term: "thank you",      termPt: "obrigado(a)",         phrase: "Thank you for choosing us!",              phrasePt: "Obrigado por escolher a gente!" },
+  { key: "f1-bye-welcome",   theme: "Despedida",  role: "you",  term: "you're welcome", termPt: "de nada",             phrase: "You're welcome! Have a great day.",       phrasePt: "De nada! Tenha um ótimo dia." },
+  { key: "f1-bye-again",     theme: "Despedida",  role: "you",  term: "come again",     termPt: "volte sempre",        phrase: "Please come again!",                      phrasePt: "Volte sempre!" },
+  { key: "f1-bye-care",      theme: "Despedida",  role: "you",  term: "take care",      termPt: "se cuida",            phrase: "Take care of your new glasses!",          phrasePt: "Cuide bem dos seus óculos novos!" },
+  { key: "f1-bye-slow",      theme: "Despedida",  role: "cust", term: "more slowly",    termPt: "mais devagar",        phrase: "Sorry, can you speak more slowly?",       phrasePt: "Desculpa, pode falar mais devagar?" },
+];
+
+// ===================== TERMOS DA FASE 2 (Nível Pleno) =====================
+// Atendimento completo com cadastro, medição, orçamento, objeção e pós-venda.
+const FASE2_TERMS = [
+  // — Recepção e cadastro —
+  { key: "f2-reg-before",   theme: "Cadastro",   role: "you",  term: "to shop before", termPt: "já ter comprado",     phrase: "Have you shopped with us before?",              phrasePt: "Você já comprou com a gente antes?" },
+  { key: "f2-reg-spell",    theme: "Cadastro",   role: "you",  term: "to spell",       termPt: "soletrar",            phrase: "Could you spell your name for me, please?",     phrasePt: "Pode soletrar seu nome, por favor?" },
+  { key: "f2-reg-file",     theme: "Cadastro",   role: "you",  term: "file / record",  termPt: "cadastro / ficha",    phrase: "Found it! Here's your file.",                   phrasePt: "Achei! Aqui está seu cadastro." },
+  // — Receita e medição —
+  { key: "f2-mea-uptodate", theme: "Medição",    role: "you",  term: "up-to-date",     termPt: "atualizada",          phrase: "Do you have an up-to-date prescription?",       phrasePt: "Você tem uma receita atualizada?" },
+  { key: "f2-mea-copy",     theme: "Medição",    role: "cust", term: "to copy the prescription", termPt: "copiar o grau", phrase: "Can you copy the prescription from my current lenses?", phrasePt: "Você consegue copiar o grau das minhas lentes atuais?" },
+  { key: "f2-mea-measure",  theme: "Medição",    role: "you",  term: "to measure",     termPt: "medir",               phrase: "I can measure your current lenses.",            phrasePt: "Posso medir suas lentes atuais." },
+  { key: "f2-mea-straight", theme: "Medição",    role: "you",  term: "to look straight", termPt: "olhar reto",        phrase: "Please look straight at me.",                   phrasePt: "Por favor, olhe direto para mim." },
+  { key: "f2-mea-minutes",  theme: "Medição",    role: "you",  term: "a few minutes",  termPt: "alguns minutos",      phrase: "Just a few minutes. Please, have a seat.",      phrasePt: "Só alguns minutos. Sente-se, por favor." },
+  // — Escolha da armação —
+  { key: "f2-fr-style",     theme: "Armação",    role: "you",  term: "style",          termPt: "estilo",              phrase: "What style do you prefer, classic or modern?",  phrasePt: "Que estilo você prefere, clássico ou moderno?" },
+  { key: "f2-fr-fits",      theme: "Armação",    role: "you",  term: "to fit the face", termPt: "ajustar-se ao rosto", phrase: "This one fits your face very well.",           phrasePt: "Essa se ajusta muito bem ao seu rosto." },
+  { key: "f2-fr-heavy",     theme: "Armação",    role: "cust", term: "heavy",          termPt: "pesada",              phrase: "This one feels heavy on my nose.",              phrasePt: "Esta está pesada no meu nariz." },
+  { key: "f2-fr-acetate",   theme: "Armação",    role: "you",  term: "acetate",        termPt: "acetato",             phrase: "Let's try an acetate frame, it's much lighter.", phrasePt: "Vamos experimentar uma armação de acetato, é bem mais leve." },
+  { key: "f2-fr-colors",    theme: "Armação",    role: "you",  term: "colors",         termPt: "cores",               phrase: "We have it in black, brown, and blue.",         phrasePt: "Temos em preto, marrom e azul." },
+  // — Lentes e orçamento —
+  { key: "f2-le-recommend", theme: "Orçamento",  role: "you",  term: "to recommend",   termPt: "recomendar",          phrase: "For your prescription, I recommend these lenses.", phrasePt: "Para o seu grau, recomendo essas lentes." },
+  { key: "f2-le-worth",     theme: "Orçamento",  role: "you",  term: "worth it",       termPt: "vale a pena",         phrase: "For daily use, it's worth it.",                 phrasePt: "Para uso diário, vale a pena." },
+  { key: "f2-le-total",     theme: "Orçamento",  role: "you",  term: "total comes to", termPt: "o total fica em",     phrase: "The total comes to seven hundred.",             phrasePt: "O total fica em setecentos." },
+  { key: "f2-le-expected",  theme: "Orçamento",  role: "cust", term: "more than expected", termPt: "mais do que esperava", phrase: "That's more than I expected.",              phrasePt: "É mais do que eu esperava." },
+  { key: "f2-le-cheaper",   theme: "Orçamento",  role: "cust", term: "to make it cheaper", termPt: "fazer mais barato", phrase: "Can you make it cheaper?",                    phrasePt: "Consegue fazer mais barato?" },
+  { key: "f2-le-cash10",    theme: "Orçamento",  role: "you",  term: "cash discount",  termPt: "desconto à vista",    phrase: "If you pay in cash, I can offer a ten percent discount.", phrasePt: "À vista consigo dez por cento de desconto." },
+  { key: "f2-le-nointerest", theme: "Orçamento", role: "you",  term: "no interest",    termPt: "sem juros",           phrase: "In up to ten installments, no interest at all.", phrasePt: "Em até dez vezes, sem juros nenhum." },
+  { key: "f2-le-contactless", theme: "Orçamento", role: "you", term: "contactless",    termPt: "por aproximação",     phrase: "Yes, we accept contactless payments.",          phrasePt: "Sim, aceitamos pagamento por aproximação." },
+  { key: "f2-le-cardcopy",  theme: "Orçamento",  role: "you",  term: "card receipt",   termPt: "via do cartão",       phrase: "Would you like the card receipt?",              phrasePt: "Gostaria da via do cartão?" },
+  // — Conserto rápido —
+  { key: "f2-fix-fix",      theme: "Conserto",   role: "cust", term: "to fix",         termPt: "consertar",           phrase: "My glasses are broken. Can you fix them?",      phrasePt: "Meus óculos quebraram. Consegue consertar?" },
+  { key: "f2-fix-screw",    theme: "Conserto",   role: "you",  term: "screw",          termPt: "parafuso",            phrase: "The screw is missing. I can replace it right now.", phrasePt: "O parafuso caiu. Posso trocar agora mesmo." },
+  { key: "f2-fix-free",     theme: "Conserto",   role: "you",  term: "free of charge", termPt: "sem custo",           phrase: "I can replace it right now, free of charge.",   phrasePt: "Posso trocar agora mesmo, sem custo." },
+  { key: "f2-fix-temple",   theme: "Conserto",   role: "you",  term: "temple / arm",   termPt: "haste (chaleira)",    phrase: "The temple is bent. I can adjust it for you.",  phrasePt: "A haste está torta. Posso ajustar para você." },
+  // — Situação delicada —
+  { key: "f2-oth-remake",   theme: "Situações",  role: "cust", term: "to remake",      termPt: "refazer",             phrase: "I want to remake these glasses exactly the same.", phrasePt: "Quero refazer esses óculos exatamente iguais." },
+  { key: "f2-oth-another",  theme: "Situações",  role: "you",  term: "another store",  termPt: "outra loja",          phrase: "The frame is from another store.",              phrasePt: "A armação é de outra loja." },
+  { key: "f2-oth-similar",  theme: "Situações",  role: "you",  term: "a similar frame", termPt: "armação parecida",   phrase: "I can help you choose a similar frame here.",   phrasePt: "Posso te ajudar a escolher uma armação parecida aqui." },
+  // — Dúvidas comuns —
+  { key: "f2-dou-scratch",  theme: "Dúvidas",    role: "cust", term: "to scratch easily", termPt: "riscar fácil",     phrase: "Do these lenses scratch easily?",               phrasePt: "Essas lentes riscam fácil?" },
+  { key: "f2-dou-blue",     theme: "Dúvidas",    role: "you",  term: "blue light filter", termPt: "filtro de luz azul", phrase: "I recommend a blue light filter on your lenses.", phrasePt: "Recomendo o filtro de luz azul nas lentes." },
+  { key: "f2-dou-cleanhow", theme: "Dúvidas",    role: "you",  term: "neutral soap",   termPt: "sabão neutro",        phrase: "Use water, neutral soap, and a soft cloth.",    phrasePt: "Use água, sabão neutro e um pano macio." },
+  { key: "f2-dou-shirt",    theme: "Dúvidas",    role: "you",  term: "to scratch",     termPt: "riscar",              phrase: "Never use your shirt, it scratches the lenses.", phrasePt: "Nunca use a camiseta, ela risca as lentes." },
+  { key: "f2-dou-contacts", theme: "Dúvidas",    role: "cust", term: "contact lenses", termPt: "lentes de contato",   phrase: "Do you sell contact lenses?",                   phrasePt: "Vocês vendem lentes de contato?" },
+  { key: "f2-dou-swim",     theme: "Dúvidas",    role: "you",  term: "to damage",      termPt: "danificar",           phrase: "Chlorine can damage the lens coating.",         phrasePt: "O cloro pode danificar o tratamento da lente." },
+  // — Troca e garantia —
+  { key: "f2-war-warranty", theme: "Garantia",   role: "you",  term: "one-year warranty", termPt: "um ano de garantia", phrase: "The frame has a one-year warranty.",         phrasePt: "A armação tem um ano de garantia." },
+  { key: "f2-war-exchange", theme: "Garantia",   role: "you",  term: "to exchange",    termPt: "trocar",              phrase: "You can exchange it within seven days.",        phrasePt: "Você pode trocar em até sete dias." },
+  { key: "f2-war-defect",   theme: "Garantia",   role: "you",  term: "manufacturing defect", termPt: "defeito de fabricação", phrase: "The warranty covers manufacturing defects.", phrasePt: "A garantia cobre defeitos de fabricação." },
+  // — Sol com grau —
+  { key: "f2-sun-presc",    theme: "Sol",        role: "cust", term: "prescription sunglasses", termPt: "óculos de sol com grau", phrase: "Can I have prescription sunglasses?",   phrasePt: "Posso ter óculos de sol com grau?" },
+  { key: "f2-sun-uv",       theme: "Sol",        role: "you",  term: "full UV protection", termPt: "proteção UV total", phrase: "All our sun lenses have full UV protection.",  phrasePt: "Todas as nossas lentes solares têm proteção UV total." },
+  { key: "f2-sun-polar",    theme: "Sol",        role: "you",  term: "polarized",      termPt: "polarizada",          phrase: "Polarized brown lenses cut the glare for driving.", phrasePt: "Lentes polarizadas marrons cortam o reflexo para dirigir." },
+  // — Contato e encerramento —
+  { key: "f2-end-ready5",   theme: "Encerramento", role: "you", term: "business days", termPt: "dias úteis",          phrase: "Your glasses will be ready in five business days.", phrasePt: "Seus óculos ficam prontos em cinco dias úteis." },
+  { key: "f2-end-whats",    theme: "Encerramento", role: "you", term: "to message on WhatsApp", termPt: "avisar no WhatsApp", phrase: "We'll message you on WhatsApp when they arrive.", phrasePt: "Avisamos no WhatsApp quando chegarem." },
+  { key: "f2-end-close",    theme: "Encerramento", role: "you", term: "to close",      termPt: "fechar (a loja)",     phrase: "We close at six. See you soon!",                phrasePt: "Fechamos às seis. Até logo!" },
+  { key: "f2-end-id",       theme: "Encerramento", role: "you", term: "receipt or ID", termPt: "comprovante ou documento", phrase: "Just bring your receipt or your ID.",       phrasePt: "Só traga seu comprovante ou documento." },
+  { key: "f2-end-loose",    theme: "Encerramento", role: "cust", term: "loose",        termPt: "frouxo",              phrase: "It feels a little loose.",                      phrasePt: "Está um pouco frouxo." },
+];
+
+// ===================== TERMOS DA FASE 3 (Nível Sênior) =====================
+// Consultivo: anamnese, exame, escada de lentes, valor, negociação e pós-venda.
+const FASE3_TERMS = [
+  // — Anamnese —
+  { key: "f3-an-lastexam",  theme: "Anamnese",   role: "you",  term: "last eye exam",  termPt: "último exame de vista", phrase: "When was your last eye exam?",                phrasePt: "Quando foi seu último exame de vista?" },
+  { key: "f3-an-farnear",   theme: "Anamnese",   role: "you",  term: "far or up close", termPt: "de longe ou de perto", phrase: "Do you see worse far away or up close?",      phrasePt: "Você enxerga pior de longe ou de perto?" },
+  { key: "f3-an-hold",      theme: "Anamnese",   role: "cust", term: "to hold far",    termPt: "segurar longe",       phrase: "I have to hold my phone far from my face.",     phrasePt: "Tenho que segurar o celular longe do rosto." },
+  { key: "f3-an-screens",   theme: "Anamnese",   role: "you",  term: "hours on screens", termPt: "horas em telas",    phrase: "How many hours a day do you spend on screens?", phrasePt: "Quantas horas por dia você passa em telas?" },
+  { key: "f3-an-strain",    theme: "Anamnese",   role: "you",  term: "eye strain",     termPt: "cansaço visual",      phrase: "Do you get headaches or eye strain?",           phrasePt: "Você sente dor de cabeça ou cansaço visual?" },
+  { key: "f3-an-glare",     theme: "Anamnese",   role: "you",  term: "glare",          termPt: "ofuscamento",         phrase: "Do you notice glare from headlights at night?", phrasePt: "Você percebe ofuscamento dos faróis à noite?" },
+  { key: "f3-an-bother",    theme: "Anamnese",   role: "cust", term: "to bother",      termPt: "incomodar",           phrase: "The lights bother me a lot.",                   phrasePt: "As luzes me incomodam muito." },
+  // — Condução ao exame —
+  { key: "f3-ex-updated",   theme: "Exame",      role: "you",  term: "an updated exam", termPt: "exame atualizado",   phrase: "I recommend an updated eye exam.",              phrasePt: "Recomendo um exame de vista atualizado." },
+  { key: "f3-ex-changed",   theme: "Exame",      role: "you",  term: "to change",      termPt: "mudar (o grau)",      phrase: "Your symptoms suggest your prescription has changed.", phrasePt: "Seus sintomas sugerem que seu grau mudou." },
+  { key: "f3-ex-harder",    theme: "Exame",      role: "you",  term: "to work harder", termPt: "trabalhar mais",      phrase: "Your eyes work harder than they should.",       phrasePt: "Seus olhos trabalham mais do que deviam." },
+  { key: "f3-ex-optom",     theme: "Exame",      role: "you",  term: "optometrist",    termPt: "optometrista",        phrase: "We can schedule an appointment with the optometrist.", phrasePt: "Podemos agendar uma consulta com o optometrista." },
+  // — Hospital dos óculos —
+  { key: "f3-hos-crooked",  theme: "Manutenção", role: "cust", term: "crooked",        termPt: "torto",               phrase: "Can you look at my old glasses? They're crooked.", phrasePt: "Pode olhar meus óculos antigos? Estão tortos." },
+  { key: "f3-hos-nosepad",  theme: "Manutenção", role: "you",  term: "nose pad",       termPt: "plaqueta",            phrase: "One nose pad is missing.",                      phrasePt: "Falta uma plaqueta." },
+  { key: "f3-hos-onspot",   theme: "Manutenção", role: "you",  term: "on the spot",    termPt: "na hora",             phrase: "Simple repairs are done on the spot.",          phrasePt: "Consertos simples são feitos na hora." },
+  // — Escada de lentes —
+  { key: "f3-len-single",   theme: "Lentes",     role: "you",  term: "single vision",  termPt: "monofocal",           phrase: "Single vision lenses correct one distance.",    phrasePt: "Lentes monofocais corrigem uma distância." },
+  { key: "f3-len-entry",    theme: "Lentes",     role: "you",  term: "entry-level",    termPt: "opção de entrada",    phrase: "Conventional lenses are our entry-level option.", phrasePt: "As convencionais são nossa opção de entrada." },
+  { key: "f3-len-progr",    theme: "Lentes",     role: "you",  term: "progressive lenses", termPt: "multifocais / progressivas", phrase: "Progressive lenses correct far, intermediate, and near.", phrasePt: "As multifocais corrigem longe, meia distância e perto." },
+  { key: "f3-len-dizzy",    theme: "Lentes",     role: "cust", term: "to get dizzy",   termPt: "ficar tonto(a)",      phrase: "My friend bought progressives and got dizzy.",  phrasePt: "Minha amiga comprou multifocal e ficou tonta." },
+  { key: "f3-len-fields",   theme: "Lentes",     role: "you",  term: "visual fields",  termPt: "campos de visão",     phrase: "The visual fields are narrower on conventional lenses.", phrasePt: "Os campos de visão são mais estreitos nas convencionais." },
+  { key: "f3-len-digital",  theme: "Lentes",     role: "you",  term: "digital lenses", termPt: "lentes digitais",     phrase: "Digital lenses are surfaced with higher precision.", phrasePt: "Lentes digitais são surfaçadas com precisão maior." },
+  { key: "f3-len-sharper",  theme: "Lentes",     role: "you",  term: "sharper vision", termPt: "visão mais nítida",   phrase: "The result is sharper vision and wider fields.", phrasePt: "O resultado é visão mais nítida e campos mais amplos." },
+  { key: "f3-len-freeform", theme: "Lentes",     role: "you",  term: "Freeform",       termPt: "Freeform (personalizada)", phrase: "Freeform lenses are fully customized for you.", phrasePt: "As lentes Freeform são totalmente personalizadas para você." },
+  { key: "f3-len-advanced", theme: "Lentes",     role: "you",  term: "most advanced",  termPt: "mais avançada",       phrase: "It's our most advanced technology.",            phrasePt: "É nossa tecnologia mais avançada." },
+  // — Valor e negociação —
+  { key: "f3-val-invest",   theme: "Negociação", role: "you",  term: "an investment",  termPt: "um investimento",     phrase: "It's an investment in your comfort.",           phrasePt: "É um investimento no seu conforto." },
+  { key: "f3-val-budget",   theme: "Negociação", role: "cust", term: "over my budget", termPt: "acima do orçamento",  phrase: "That's over my budget.",                        phrasePt: "Isso está acima do meu orçamento." },
+  { key: "f3-val-perday",   theme: "Negociação", role: "you",  term: "per day",        termPt: "por dia",             phrase: "It costs less than two reais a day.",           phrasePt: "Custa menos de dois reais por dia." },
+  { key: "f3-val-online",   theme: "Negociação", role: "cust", term: "cheaper online", termPt: "mais barato na internet", phrase: "I saw cheaper prices online.",              phrasePt: "Vi preços mais baratos na internet." },
+  { key: "f3-val-service",  theme: "Negociação", role: "you",  term: "the service",    termPt: "o serviço",           phrase: "Online you buy a product; here you get the service.", phrasePt: "Na internet você compra um produto; aqui você leva o serviço." },
+  { key: "f3-val-twelve",   theme: "Negociação", role: "you",  term: "interest-free installments", termPt: "parcelas sem juros", phrase: "We can split it into twelve interest-free installments.", phrasePt: "Podemos parcelar em doze vezes sem juros." },
+  // — Fechamento consultivo —
+  { key: "f3-clo-best",     theme: "Fechamento", role: "you",  term: "the best investment", termPt: "o melhor investimento", phrase: "The Freeform is the best investment for you.", phrasePt: "A Freeform é o melhor investimento para você." },
+  { key: "f3-clo-adapt",    theme: "Fechamento", role: "you",  term: "adaptation guarantee", termPt: "garantia de adaptação", phrase: "You have an adaptation guarantee.",         phrasePt: "Você tem garantia de adaptação." },
+  { key: "f3-clo-goahead",  theme: "Fechamento", role: "you",  term: "to go ahead",    termPt: "seguir / fechar",     phrase: "Shall we go ahead with this option?",           phrasePt: "Podemos fechar com essa opção?" },
+  { key: "f3-clo-order",    theme: "Fechamento", role: "you",  term: "made to order",  termPt: "feita sob encomenda", phrase: "Freeform lenses are made to order.",            phrasePt: "As lentes Freeform são feitas sob encomenda." },
+  { key: "f3-clo-trust",    theme: "Fechamento", role: "you",  term: "to trust",       termPt: "confiar",             phrase: "Thank you for trusting us!",                    phrasePt: "Obrigado pela confiança!" },
+  // — Pós-venda —
+  { key: "f3-post-sharp",   theme: "Pós-venda",  role: "cust", term: "sharp",          termPt: "nítido",              phrase: "Wow, everything is so sharp!",                  phrasePt: "Uau, está tudo tão nítido!" },
+  { key: "f3-post-slowly",  theme: "Pós-venda",  role: "you",  term: "slowly",         termPt: "devagar",             phrase: "Move your head slowly and look around.",        phrasePt: "Mexa a cabeça devagar e olhe ao redor." },
+  { key: "f3-post-avoid",   theme: "Pós-venda",  role: "you",  term: "to avoid",       termPt: "evitar",              phrase: "At first, avoid looking down through the sides.", phrasePt: "No início, evite olhar para baixo pelas laterais." },
+  { key: "f3-post-adapt",   theme: "Pós-venda",  role: "cust", term: "fully adapted",  termPt: "totalmente adaptado", phrase: "How long until I'm fully adapted?",             phrasePt: "Quanto tempo até eu me adaptar totalmente?" },
+  { key: "f3-post-days",    theme: "Pós-venda",  role: "you",  term: "three to seven days", termPt: "três a sete dias", phrase: "Usually three to seven days.",                 phrasePt: "Normalmente de três a sete dias." },
+];
+
+// Deck de termos por nível (Fase). Todos usam o mesmo motor "Meta do dia".
+const FASE_TERMS = { 1: FASE1_TERMS, 2: FASE2_TERMS, 3: FASE3_TERMS };
+
 // ===================== DINÂMICAS =====================
 const DYNAMICS = {
   1: {
@@ -509,6 +836,18 @@ const DYNAMICS = {
         customer: "Você quer óculos novos mas não tem receita — só os óculos antigos no rosto.",
         mission: "Oferecer a cópia do grau a partir das lentes atuais e conduzir a venda.",
         twist: "Pergunte: \"Do you have this in black?\" sobre a armação mostrada.",
+      },
+      {
+        title: "Óculos para o filho",
+        customer: "Você quer óculos para seu filho de 8 anos. Se preocupa se é resistente e leve, e quer um estojo e uma cordinha.",
+        mission: "Recomendar uma armação infantil flexível e resistente, oferecer os acessórios e informar o prazo.",
+        twist: "Pergunte: \"Is it safe if he drops it?\"",
+      },
+      {
+        title: "Só dando uma olhada",
+        customer: "Você entra dizendo que está \"só olhando\". Está sem pressa, mas na verdade passa o dia no computador e sente os olhos cansados.",
+        mission: "Acolher sem pressionar, puxar assunto (small talk) e descobrir a necessidade real para então mostrar opções.",
+        twist: "Comece com \"I'm just looking, thanks.\" e só depois diga \"Actually, do you have blue light lenses?\"",
       },
     ],
     checklist: [
@@ -539,6 +878,18 @@ const DYNAMICS = {
         customer: "Você já comprou e voltou com dúvidas: como limpar, se risca fácil, se pode trocar a armação, o que a garantia cobre.",
         mission: "Responder cada dúvida com clareza e aproveitar para oferecer o filtro de luz azul.",
         twist: "Diga: \"My eyes hurt when I use my phone at night.\"",
+      },
+      {
+        title: "Presente para o marido",
+        customer: "Você quer dar óculos de sol de presente para seu marido, mas não sabe o grau dele nem o tamanho certo. Se preocupa se poderá trocar caso não sirva.",
+        mission: "Orientar a compra de presente sem receita, explicar a política de troca e sugerir vale-presente como alternativa segura.",
+        twist: "Pergunte: \"What if he doesn't like it?\"",
+      },
+      {
+        title: "Segunda via urgente",
+        customer: "Você perdeu seus óculos e precisa de um novo com urgência. Tem uma foto da receita antiga no celular.",
+        mission: "Acolher a urgência, conferir a receita pela foto, fazer o cadastro e negociar um prazo expresso.",
+        twist: "Pergunte: \"I need them by tomorrow, is that possible?\"",
       },
     ],
     checklist: [
@@ -571,6 +922,18 @@ const DYNAMICS = {
         customer: "Você quer a melhor lente mas negocia tudo: acha caro, pede desconto, compara com a internet, pergunta de garantia.",
         mission: "Defender o valor (não só o preço): custo por dia, serviço incluso, garantia de adaptação, condições de pagamento.",
         twist: "Diga: \"I saw cheaper prices online.\" e insista uma segunda vez no desconto.",
+      },
+      {
+        title: "Comparando duas óticas",
+        customer: "Você já tem um orçamento mais barato de outra ótica e veio comparar. Quer entender por que aqui é mais caro antes de decidir.",
+        mission: "Fazer a anamnese, mostrar o valor agregado (exame, garantia de adaptação, serviço e ajustes) e justificar a diferença sem baixar o preço na hora.",
+        twist: "Diga: \"The other store quoted me nine hundred. Why are you more expensive?\"",
+      },
+      {
+        title: "Retorno por inadaptação",
+        customer: "Você voltou frustrado porque não se adaptou à multifocal que comprou. Está considerando pedir o dinheiro de volta.",
+        mission: "Acolher a frustração, investigar a causa (medição, hábito de uso, tipo de lente) e oferecer solução dentro da garantia de adaptação antes de falar em reembolso.",
+        twist: "Diga: \"I want my money back.\"",
       },
     ],
     checklist: [
@@ -682,7 +1045,7 @@ export default function VooxEnglishTrainer() {
   const [view, setView] = useState("home"); // home | level | quiz
   const [tab, setTab] = useState("read");   // read | srs | pron | dyn
   const [levelId, setLevelId] = useState(1);
-  const [data, setData] = useState({ unlocked: 1, best: {}, srs: {}, pron: {}, dyn: {} });
+  const [data, setData] = useState({ unlocked: 1, best: {}, srs: {}, pron: {}, dyn: {}, daily: DEFAULT_DAILY });
   const [loaded, setLoaded] = useState(false);
   const [showFixes, setShowFixes] = useState(false);
 
@@ -698,7 +1061,7 @@ export default function VooxEnglishTrainer() {
         const r = await window.storage.get(STORAGE_KEY);
         if (r && r.value) {
           const p = JSON.parse(r.value);
-          if (p && p.unlocked) setData({ srs: {}, pron: {}, best: {}, dyn: {}, ...p });
+          if (p && p.unlocked) setData({ srs: {}, pron: {}, best: {}, dyn: {}, ...p, daily: { ...DEFAULT_DAILY, ...(p.daily || {}) } });
         }
       } catch (e) { /* primeira vez */ }
       setLoaded(true);
@@ -714,7 +1077,11 @@ export default function VooxEnglishTrainer() {
   const level = LEVELS.find((l) => l.id === levelId);
   const cards = level ? getCards(level) : [];
   const easyCount = cards.filter((c) => (data.srs[c.key]?.r ?? -1) >= 2).length;
-  const quizUnlocked = cards.length > 0 && easyCount === cards.length;
+  // Todos os níveis usam o deck híbrido "Meta do dia": a prova só libera quando o
+  // mapa da fala do nível está 100% verde (todos os termos falados com ≥80%).
+  const deck = level ? (FASE_TERMS[level.id] || []) : [];
+  const spokenWell = deck.filter((t) => (data.pron[t.key] || 0) >= 80).length;
+  const quizUnlocked = deck.length > 0 && spokenWell === deck.length;
 
   const openLevel = (id) => { setLevelId(id); setTab("read"); setView("level"); };
 
@@ -722,6 +1089,29 @@ export default function VooxEnglishTrainer() {
     const srs = { ...data.srs, [key]: { r, due: Date.now() + RATINGS[r].interval } };
     save({ ...data, srs });
   };
+
+  // Estuda um termo da Fase 1: grava a nota SRS e, se for a 1ª vez (termo novo),
+  // marca a data de introdução e atualiza o streak quando a meta do dia é batida.
+  const studyCard = (key, r, wasNew) => {
+    const srs = { ...data.srs, [key]: { r, due: Date.now() + RATINGS[r].interval } };
+    const daily = { ...DEFAULT_DAILY, ...(data.daily || {}) };
+    daily.introduced = { ...(daily.introduced || {}) };
+    if (wasNew && !daily.introduced[key]) {
+      const today = ymd(new Date());
+      daily.introduced[key] = today;
+      const introducedToday = Object.values(daily.introduced).filter((d) => d === today).length;
+      const newRemaining = Object.values(FASE_TERMS).flat().filter((t) => !daily.introduced[t.key]).length;
+      if ((introducedToday >= daily.pace || newRemaining === 0) && daily.lastGoalDay !== today) {
+        const yesterday = ymd(addDays(new Date(), -1));
+        daily.streak = daily.lastGoalDay === yesterday ? (daily.streak || 0) + 1 : 1;
+        daily.lastGoalDay = today;
+        daily.bestStreak = Math.max(daily.bestStreak || 0, daily.streak);
+      }
+    }
+    save({ ...data, srs, daily });
+  };
+
+  const setPace = (v) => save({ ...data, daily: { ...DEFAULT_DAILY, ...(data.daily || {}), pace: v } });
 
   const savePron = (key, pct) => {
     const prev = data.pron[key] || 0;
@@ -752,7 +1142,7 @@ export default function VooxEnglishTrainer() {
   };
 
   const resetAll = async () => {
-    await save({ unlocked: 1, best: {}, srs: {}, pron: {}, dyn: {} });
+    await save({ unlocked: 1, best: {}, srs: {}, pron: {}, dyn: {}, daily: DEFAULT_DAILY });
     setView("home");
   };
 
@@ -772,9 +1162,10 @@ export default function VooxEnglishTrainer() {
       {view === "level" && level && (
         <LevelView
           level={level} tab={tab} setTab={setTab} data={data}
-          cards={cards} easyCount={easyCount} quizUnlocked={quizUnlocked}
+          cards={cards} easyCount={easyCount} quizUnlocked={quizUnlocked} deck={deck}
           onBack={() => setView("home")} onQuiz={startQuiz}
           rateCard={rateCard} savePron={savePron} saveDyn={saveDyn}
+          studyCard={studyCard} setPace={setPace}
         />
       )}
       {view === "quiz" && level && (
@@ -822,8 +1213,8 @@ function Home({ data, onOpen, showFixes, setShowFixes, onReset }) {
 
       {LEVELS.map((lv) => {
         const locked = lv.id > data.unlocked;
-        const cs = getCards(lv);
-        const easy = cs.filter((c) => (data.srs[c.key]?.r ?? -1) >= 2).length;
+        const deck = FASE_TERMS[lv.id] || [];
+        const green = deck.filter((t) => (data.pron[t.key] || 0) >= 80).length;
         const best = data.best[lv.id];
         const passed = (best || 0) >= passFor(lv);
         const dyn = data.dyn[lv.id];
@@ -865,7 +1256,7 @@ function Home({ data, onOpen, showFixes, setShowFixes, onReset }) {
                 ? "🔒 Passe na prova anterior para desbloquear"
                 : passed
                   ? `✓ Aprovado — melhor nota: ${best}/${lv.quiz.length}${dyn ? ` · Dinâmica: ${dyn}%` : ""}`
-                  : `Cards: ${easy}/${cs.length}${best !== undefined ? ` · Prova: ${best}/${lv.quiz.length}` : ""}${dyn ? ` · Dinâmica: ${dyn}%` : ""}`}
+                  : `Fala: ${green}/${deck.length}${best !== undefined ? ` · Prova: ${best}/${lv.quiz.length}` : ""}${dyn ? ` · Dinâmica: ${dyn}%` : ""}`}
             </div>
           </button>
         );
@@ -898,8 +1289,12 @@ function Home({ data, onOpen, showFixes, setShowFixes, onReset }) {
 }
 
 // ===================== LEVEL VIEW (abas) =====================
-function LevelView({ level, tab, setTab, data, cards, easyCount, quizUnlocked, onBack, onQuiz, rateCard, savePron, saveDyn }) {
+function LevelView({ level, tab, setTab, data, cards, easyCount, quizUnlocked, deck, onBack, onQuiz, rateCard, savePron, saveDyn, studyCard, setPace }) {
   const pass = passFor(level);
+  const daily = data.daily || DEFAULT_DAILY;
+  const today = ymd(new Date());
+  const introducedToday = Object.values(daily.introduced || {}).filter((d) => d === today).length;
+  const deckSpokenWell = deck.filter((t) => (data.pron[t.key] || 0) >= 80).length;
   return (
     <div>
       <button onClick={onBack} style={{ background: "none", border: "none", color: C.goldDeep, fontWeight: 700, fontSize: 14, padding: 0, marginBottom: 12 }}>
@@ -915,14 +1310,15 @@ function LevelView({ level, tab, setTab, data, cards, easyCount, quizUnlocked, o
 
       <div style={{ display: "flex", gap: 5, marginBottom: 18 }}>
         <TabBtn active={tab === "read"} onClick={() => setTab("read")} label="📖 Script" />
-        <TabBtn active={tab === "srs"} onClick={() => setTab("srs")} label="🃏 Cards" badge={`${easyCount}/${cards.length}`} done={quizUnlocked} />
-        <TabBtn active={tab === "pron"} onClick={() => setTab("pron")} label="🎤 Fala" />
+        <TabBtn active={tab === "meta"} onClick={() => setTab("meta")} label="🎯 Meta do dia" badge={`${introducedToday}/${daily.pace}`} />
         <TabBtn active={tab === "dyn"} onClick={() => setTab("dyn")} label="🎭 Dinâmica" />
       </div>
 
       {tab === "read" && <ReadTab level={level} />}
-      {tab === "srs" && <SrsTab cards={cards} srs={data.srs} rateCard={rateCard} quizUnlocked={quizUnlocked} />}
-      {tab === "pron" && <PronTab cards={cards.filter((c) => c.type === "you")} pron={data.pron} savePron={savePron} />}
+      {(tab === "meta" || tab === "srs" || tab === "pron") && (
+        <MetaDoDiaTab terms={deck} srs={data.srs} pron={data.pron} daily={daily}
+          studyCard={studyCard} savePron={savePron} setPace={setPace} />
+      )}
       {tab === "dyn" && <DynTab level={level} best={data.dyn[level.id]} saveDyn={saveDyn} />}
 
       <div style={{ marginTop: 22 }}>
@@ -937,11 +1333,13 @@ function LevelView({ level, tab, setTab, data, cards, easyCount, quizUnlocked, o
             boxShadow: quizUnlocked ? "0 4px 12px rgba(200,169,110,0.4)" : "none",
           }}
         >
-          {quizUnlocked ? `Fazer a prova do Nível ${level.id}` : `🔒 Prova travada — ${easyCount}/${cards.length} cards fáceis`}
+          {quizUnlocked
+            ? `Fazer a prova do Nível ${level.id}`
+            : `🔒 Prova travada — ${deckSpokenWell}/${deck.length} termos falados bem`}
         </button>
         <p style={{ textAlign: "center", fontSize: 12.5, color: C.inkSoft, marginTop: 8, lineHeight: 1.5 }}>
-          A prova libera com 100% dos cards em Fácil ou Muito fácil.
-          Precisa de {pass}/{level.quiz.length} para {level.id < 3 ? "desbloquear o próximo nível" : "concluir o treinamento"}.
+          A prova libera quando TODOS os termos ficarem verdes no mapa da fala (falados com ≥80%).
+          {" "}Precisa de {pass}/{level.quiz.length} para {level.id < 3 ? "desbloquear o próximo nível" : "concluir o treinamento"}.
           {data.best[level.id] !== undefined ? ` Sua melhor nota: ${data.best[level.id]}/${level.quiz.length}.` : ""}
         </p>
       </div>
@@ -1175,9 +1573,11 @@ function SrsTab({ cards, srs, rateCard, quizUnlocked }) {
   );
 }
 
-// ===================== ABA PRONÚNCIA =====================
-function PronTab({ cards, pron, savePron }) {
-  const [idx, setIdx] = useState(0);
+// ===================== MOTOR DE FALA (reaproveitável) =====================
+// Encapsula TTS (ouvir), reconhecimento de voz (nota) e gravação da própria fala.
+// Usado pelo PronTab e pelo card híbrido da Fase 1. `targetEn` é a frase-alvo a
+// pontuar; `onScore(pct, result)` é chamado quando há uma nota nova.
+function useSpeech(targetEn, onScore) {
   const [listening, setListening] = useState(false);
   const [starting, setStarting] = useState(false); // mic pedido, mas ainda não engatou
   const [liveText, setLiveText] = useState("");     // transcrição ao vivo
@@ -1197,10 +1597,10 @@ function PronTab({ cards, pron, savePron }) {
   const startFallbackRef = useRef(null);
   const audioUrlRef = useRef(null);
   const myAudioRef = useRef(null);    // <audio> da própria gravação
+  const onScoreRef = useRef(onScore);
+  useEffect(() => { onScoreRef.current = onScore; });
 
   const SR = typeof window !== "undefined" ? (window.SpeechRecognition || window.webkitSpeechRecognition) : null;
-  const card = cards[idx];
-  const best = pron[card.key] || 0;
 
   useEffect(() => { audioUrlRef.current = audioUrl; }, [audioUrl]);
 
@@ -1213,16 +1613,16 @@ function PronTab({ cards, pron, savePron }) {
     if (audioUrlRef.current) URL.revokeObjectURL(audioUrlRef.current);
   }, []);
 
-  // Trocar de frase zera tudo e descarta a gravação anterior.
+  // Trocar de alvo zera tudo e descarta a gravação anterior.
   useEffect(() => {
     setResult(null); setSrError(null); setLiveText(""); setSelfMode(false);
     setAudioUrl((u) => { if (u) URL.revokeObjectURL(u); return null; });
-  }, [idx]);
+  }, [targetEn]);
 
   const speak = (rate) => {
     try {
       window.speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(card.en);
+      const u = new SpeechSynthesisUtterance(targetEn);
       u.lang = "en-US";
       u.rate = rate;
       const voices = window.speechSynthesis.getVoices();
@@ -1256,10 +1656,10 @@ function PronTab({ cards, pron, savePron }) {
       const avgConf = confRef.current.length
         ? confRef.current.reduce((a, b) => a + b, 0) / confRef.current.length
         : 0;
-      const s = scorePronunciation(card.en, transcript, avgConf);
+      const s = scorePronunciation(targetEn, transcript, avgConf);
       const full = { ...s, transcript };
       setResult(full);
-      savePron(card.key, full.pct);
+      if (onScoreRef.current) onScoreRef.current(full.pct, full);
     }
   };
 
@@ -1386,6 +1786,19 @@ function PronTab({ cards, pron, savePron }) {
       streamRef.current = null;
     }
   };
+
+  return { SR, listening, starting, liveText, result, srError, selfMode, audioUrl, myAudioRef, speak, playMine, listen, stopListening };
+}
+
+// ===================== ABA PRONÚNCIA =====================
+function PronTab({ cards, pron, savePron }) {
+  const [idx, setIdx] = useState(0);
+  const card = cards[idx];
+  const best = pron[card.key] || 0;
+  const {
+    listening, starting, liveText, result, srError, selfMode, audioUrl,
+    myAudioRef, speak, playMine, listen, stopListening,
+  } = useSpeech(card.en, (pct) => savePron(card.key, pct));
 
   const feedback = (pct) =>
     pct >= 80 ? { txt: "Excelente! Pronúncia clara.", color: C.ok }
@@ -1558,6 +1971,368 @@ function PronBtn({ onClick, label }) {
     >
       {label}
     </button>
+  );
+}
+
+// ===================== ABA META DO DIA (deck híbrido da Fase 1) =====================
+function MetaDoDiaTab({ terms, srs, pron, daily, studyCard, savePron, setPace }) {
+  const [queue, setQueue] = useState([]);       // [{ key, isNew }]
+  const [sessionDone, setSessionDone] = useState(false);
+  const [showPace, setShowPace] = useState(false);
+
+  const today = ymd(new Date());
+  const introduced = daily.introduced || {};
+  const introducedToday = Object.values(introduced).filter((d) => d === today).length;
+  const totalIntroduced = Object.keys(introduced).length;
+  const pace = daily.pace;
+  const goalMet = introducedToday >= pace;
+
+  // Monta a sessão UMA vez ao abrir a aba: termos novos até bater a cota do dia,
+  // depois as revisões vencidas (repetição espaçada).
+  useEffect(() => {
+    const now = Date.now();
+    const isIntro = (k) => !!introduced[k];
+    const newQuota = Math.max(0, pace - introducedToday);
+    const newBatch = terms.filter((t) => !isIntro(t.key)).slice(0, newQuota).map((t) => ({ key: t.key, isNew: true }));
+    const reviews = terms.filter((t) => {
+      if (!isIntro(t.key)) return false;
+      const s = srs[t.key];
+      if (!s) return true;
+      if (s.r < 2) return true;
+      return s.due <= now;
+    }).map((t) => ({ key: t.key, isNew: false }));
+    const q = [...newBatch, ...reviews];
+    setQueue(q);
+    setSessionDone(q.length === 0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const byKey = (k) => terms.find((t) => t.key === k);
+  const currentItem = queue[0];
+  const current = currentItem ? byKey(currentItem.key) : null;
+  const newsLeft = queue.filter((q) => q.isNew).length;
+  const reviewsLeft = queue.filter((q) => !q.isNew).length;
+
+  const handleRate = (r) => {
+    if (!currentItem) return;
+    studyCard(currentItem.key, r, currentItem.isNew);
+    setQueue((q) => {
+      const rest = q.slice(1);
+      if (r === 0) { const nq = [...rest]; nq.splice(Math.min(3, nq.length), 0, currentItem); return nq; } // "De novo" volta pra fila
+      if (rest.length === 0) setSessionDone(true);
+      return rest;
+    });
+  };
+
+  const pullMore = () => {
+    const next = terms
+      .filter((t) => !introduced[t.key] && !queue.some((q) => q.key === t.key))
+      .slice(0, pace)
+      .map((t) => ({ key: t.key, isNew: true }));
+    if (next.length) { setQueue(next); setSessionDone(false); }
+  };
+
+  // Praticar um termo específico ao tocar no quadradinho do mapa.
+  const studyOne = (key) => {
+    const isNew = !introduced[key];
+    setQueue((q) => [{ key, isNew }, ...q.filter((x) => x.key !== key)]);
+    setSessionDone(false);
+  };
+
+  const newTermsRemaining = terms.filter((t) => !introduced[t.key]).length;
+  const barPct = Math.min(100, Math.round((introducedToday / pace) * 100));
+
+  // Streak "vivo": quebra se o último dia batido não foi hoje nem ontem (virada de dia).
+  const yesterday = ymd(addDays(new Date(), -1));
+  const streakAlive = daily.lastGoalDay === today || daily.lastGoalDay === yesterday;
+  const streak = streakAlive ? (daily.streak || 0) : 0;
+  const bestStreak = daily.bestStreak || 0;
+  const MILESTONES = [3, 7, 14, 30];
+  const nextMilestone = MILESTONES.find((m) => m > streak);
+  const spokenWell = terms.filter((t) => (pron[t.key] || 0) >= 80).length;
+  const allGreen = terms.length > 0 && spokenWell === terms.length;
+
+  return (
+    <div>
+      {allGreen && (
+        <div style={{ background: C.ok, borderRadius: 14, padding: "14px 16px", marginBottom: 14, color: "#fff", textAlign: "center" }}>
+          <div style={{ fontFamily: FONT_HEAD, fontSize: 18, fontWeight: 700 }}>🎉 Fase 1 dominada na fala!</div>
+          <div style={{ fontSize: 12.5, marginTop: 3, color: "#EAF3EC" }}>
+            Todos os {terms.length} termos verdes. A prova do Júnior está liberada — role até o fim para fazê-la.
+          </div>
+        </div>
+      )}
+
+      {/* Cabeçalho: streak + progresso do dia + ajuste de ritmo */}
+      <div style={{ background: C.card, borderRadius: 14, padding: "14px 16px", marginBottom: 14, color: C.cream }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+          <span style={{ fontSize: 14.5, fontWeight: 700 }}>
+            {streak > 0 ? "🔥" : "🌱"} {streak} {streak === 1 ? "dia seguido" : "dias seguidos"}
+            {bestStreak > streak && (
+              <span style={{ fontSize: 11.5, fontWeight: 600, color: C.gold, marginLeft: 6 }}>· recorde {bestStreak}</span>
+            )}
+          </span>
+          <button onClick={() => setShowPace((s) => !s)}
+            style={{ background: "rgba(239,233,218,0.14)", border: "none", color: C.gold, borderRadius: 8, padding: "5px 10px", fontWeight: 700, fontSize: 12.5 }}>
+            ⚙️ Ritmo: {pace}/dia
+          </button>
+        </div>
+        <div style={{ height: 9, background: "rgba(0,0,0,0.25)", borderRadius: 5, overflow: "hidden" }}>
+          <div style={{ height: "100%", width: `${barPct}%`, background: goalMet ? C.okSoft : C.gold, borderRadius: 5, transition: "width .3s ease" }} />
+        </div>
+        <div style={{ fontSize: 12.5, color: "#DDE4DA", marginTop: 7 }}>
+          {goalMet ? "✓ Meta do dia batida! " : ""}{introducedToday}/{pace} termos novos hoje · {totalIntroduced}/{terms.length} no total
+        </div>
+        {streak > 0 && nextMilestone && (
+          <div style={{ fontSize: 11.5, color: C.gold, marginTop: 3 }}>
+            🏅 Faltam {nextMilestone - streak} {nextMilestone - streak === 1 ? "dia" : "dias"} para o marco de {nextMilestone} dias.
+          </div>
+        )}
+        {streak === 0 && bestStreak > 0 && (
+          <div style={{ fontSize: 11.5, color: C.gold, marginTop: 3 }}>
+            Streak zerado — bata a meta hoje para recomeçar. Seu recorde é {bestStreak} dias.
+          </div>
+        )}
+
+        {showPace && (
+          <div style={{ marginTop: 12, borderTop: "1px solid rgba(239,233,218,0.18)", paddingTop: 12 }}>
+            <div style={{ fontSize: 12, color: "#DDE4DA", marginBottom: 8 }}>Quantos termos NOVOS por dia?</div>
+            <div style={{ display: "flex", gap: 5 }}>
+              {PACE_STOPS.map((p) => (
+                <button key={p.v} onClick={() => setPace(p.v)}
+                  style={{
+                    flex: 1, border: `1.5px solid ${pace === p.v ? C.gold : "rgba(239,233,218,0.3)"}`,
+                    background: pace === p.v ? C.gold : "transparent", color: pace === p.v ? C.card : C.cream,
+                    borderRadius: 9, padding: "8px 2px", fontWeight: 700, fontSize: 14,
+                  }}>
+                  {p.v}
+                </button>
+              ))}
+            </div>
+            <div style={{ fontSize: 12, color: C.gold, fontWeight: 600, marginTop: 8, textAlign: "center" }}>
+              {(PACE_STOPS.find((p) => p.v === pace) || PACE_STOPS[2]).label} · {(PACE_STOPS.find((p) => p.v === pace) || PACE_STOPS[2]).hint}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {sessionDone || !current ? (
+        <div style={{ background: C.paper, border: `1px solid ${C.line}`, borderRadius: 16, padding: "30px 20px", textAlign: "center" }}>
+          <div style={{ fontSize: 40 }}>{goalMet ? "🎉" : "☕"}</div>
+          <div style={{ fontFamily: FONT_HEAD, fontSize: 21, fontWeight: 700, color: C.card, margin: "8px 0 6px" }}>
+            {goalMet ? "Meta do dia concluída!" : "Sessão em dia"}
+          </div>
+          <p style={{ fontSize: 14, color: C.inkSoft, margin: "0 0 14px", lineHeight: 1.5 }}>
+            {goalMet
+              ? `Você fixou ${introducedToday} termos hoje e manteve o streak em ${daily.streak || 0}. As revisões voltam sozinhas quando o intervalo vencer.`
+              : "Nada pendente agora. Volte quando as revisões vencerem."}
+            {newTermsRemaining === 0 && " 🏆 Você já viu todos os termos da Fase 1!"}
+          </p>
+          {newTermsRemaining > 0 && (
+            <button onClick={pullMore}
+              style={{ border: `1.5px solid ${C.goldDeep}`, background: C.paper, color: C.goldDeep, borderRadius: 10, padding: "10px 16px", fontWeight: 700, fontSize: 13.5 }}>
+              Puxar +{Math.min(pace, newTermsRemaining)} termos agora
+              <span style={{ display: "block", fontSize: 11, fontWeight: 500, color: C.inkSoft, marginTop: 2 }}>adianta o de amanhã · mais volume, menos retenção</span>
+            </button>
+          )}
+        </div>
+      ) : (
+        <>
+          <div style={{ fontSize: 12, color: C.inkSoft, fontWeight: 600, marginBottom: 8, textAlign: "center" }}>
+            {newsLeft > 0 && <span style={{ color: C.goldDeep }}>{newsLeft} {newsLeft === 1 ? "novo" : "novos"}</span>}
+            {newsLeft > 0 && reviewsLeft > 0 && " · "}
+            {reviewsLeft > 0 && <span>{reviewsLeft} {reviewsLeft === 1 ? "revisão" : "revisões"}</span>}
+            {" na fila · "}{current.theme}
+          </div>
+          <HybridCard
+            key={current.key}
+            term={current}
+            isNew={currentItem.isNew}
+            pronBest={pron[current.key] || 0}
+            savePron={savePron}
+            onRate={handleRate}
+          />
+        </>
+      )}
+
+      {/* Mapa da fala: como cada termo foi FALADO. Toque para praticar de novo. */}
+      <div style={{ marginTop: 18, background: C.paper, border: `1px solid ${C.line}`, borderRadius: 12, padding: "12px 12px 10px" }}>
+        <div style={{ fontSize: 12, fontWeight: 700, color: C.inkSoft, marginBottom: 8 }}>🎤 Mapa da fala</div>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
+          {terms.map((t, i) => {
+            const p = pron[t.key] || 0;
+            const seen = !!introduced[t.key];
+            const isCurrent = current && current.key === t.key;
+            const bg = p >= 80 ? C.ok : p > 0 ? C.gold : C.paper;
+            const spokenPending = seen && p === 0; // visto mas ainda não falado (ou "pulado")
+            return (
+              <button
+                key={t.key}
+                onClick={() => studyOne(t.key)}
+                title={`${t.term} — ${p >= 80 ? "falado bem" : p > 0 ? `falado ${p}%` : spokenPending ? "visto, fala pendente" : "não visto"}`}
+                style={{
+                  width: 26, height: 26, borderRadius: 7, fontSize: 11, fontWeight: 700,
+                  border: isCurrent ? `2px solid ${C.card}` : spokenPending ? `1.5px dashed ${C.goldDeep}` : `1.5px solid ${C.line}`,
+                  background: bg,
+                  color: p > 0 ? "#fff" : spokenPending ? C.goldDeep : C.inkSoft,
+                  opacity: seen || p > 0 ? 1 : 0.45,
+                }}
+              >
+                {p >= 80 ? "✓" : spokenPending ? "!" : i + 1}
+              </button>
+            );
+          })}
+        </div>
+        <div style={{ fontSize: 11, color: C.inkSoft, marginTop: 8, lineHeight: 1.5 }}>
+          <b style={{ color: C.ok }}>✓ verde</b> falou bem (≥80%) · <b style={{ color: C.goldDeep }}>dourado</b> dá pra melhorar · <b style={{ color: C.goldDeep }}>! tracejado</b> visto mas fala pendente · apagado = não visto
+        </div>
+        {(() => {
+          const green = terms.filter((t) => (pron[t.key] || 0) >= 80).length;
+          const allGreen = green === terms.length;
+          return (
+            <div style={{ marginTop: 8, fontSize: 12, fontWeight: 700, color: allGreen ? C.ok : C.goldDeep, textAlign: "center" }}>
+              {allGreen ? "🔓 Prova liberada! Todos os termos falados bem." : `🔒 Prova libera com todos verdes — ${green}/${terms.length}`}
+            </div>
+          );
+        })()}
+      </div>
+    </div>
+  );
+}
+
+// Card híbrido: termo em destaque + frase âncora + ouvir/falar + avaliação SRS.
+function HybridCard({ term, isNew, pronBest, savePron, onRate }) {
+  const [flipped, setFlipped] = useState(false);
+  const {
+    listening, starting, liveText, result, srError, selfMode, audioUrl,
+    myAudioRef, speak, playMine, listen, stopListening,
+  } = useSpeech(term.phrase, (pct) => savePron(term.key, pct));
+
+  const roleLabel = term.role === "cust" ? "👂 O cliente diz" : "🗣 Você diz";
+  const fb = result
+    ? result.pct >= 80 ? { t: "Pronúncia clara!", c: C.ok } : result.pct >= 60 ? { t: "Quase lá.", c: "#B4842D" } : { t: "Repita devagar.", c: C.bad }
+    : null;
+
+  return (
+    <div style={{ background: C.paper, border: `1.5px solid ${isNew ? C.goldDeep : C.line}`, borderRadius: 16, padding: "22px 18px", boxShadow: "0 4px 14px rgba(32,52,42,0.10)" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+        <span style={{ fontSize: 10.5, letterSpacing: 1.5, textTransform: "uppercase", color: C.goldDeep, fontWeight: 700 }}>
+          {isNew ? "✨ Termo novo" : "🔁 Revisão"} · {term.theme}
+        </span>
+        {pronBest > 0 && <span style={{ fontSize: 11.5, color: pronBest >= 80 ? C.ok : C.goldDeep, fontWeight: 700 }}>🎤 {pronBest}%</span>}
+      </div>
+
+      {/* Termo em destaque */}
+      <div style={{ textAlign: "center" }}>
+        <div style={{ fontFamily: FONT_HEAD, fontSize: 30, fontWeight: 700, color: C.ink, lineHeight: 1.2 }}>{term.term}</div>
+        {flipped && <div style={{ fontSize: 15, color: C.goldDeep, fontWeight: 600, marginTop: 4 }}>{term.termPt}</div>}
+      </div>
+
+      {!flipped ? (
+        <div style={{ textAlign: "center", marginTop: 18 }}>
+          <button onClick={() => setFlipped(true)}
+            style={{ border: "none", background: C.card, color: C.cream, borderRadius: 10, padding: "11px 20px", fontWeight: 700, fontSize: 14.5 }}>
+            Ver significado e uso
+          </button>
+          <div style={{ fontSize: 12, color: C.inkSoft, marginTop: 10 }}>Você lembra o que significa e como usar?</div>
+        </div>
+      ) : (
+        <>
+          {/* Frase âncora */}
+          <div style={{ marginTop: 16, background: C.bg, borderRadius: 12, padding: "14px 14px" }}>
+            <div style={{ fontSize: 10.5, letterSpacing: 1.5, textTransform: "uppercase", color: C.goldDeep, fontWeight: 700, marginBottom: 6 }}>{roleLabel}</div>
+            <div style={{ fontFamily: FONT_HEAD, fontSize: 18, fontWeight: 600, lineHeight: 1.4 }}>
+              {result
+                ? term.phrase.split(" ").map((w, i) => (
+                    <span key={i} style={{ color: result.displayHits[i] ? C.ok : C.bad }}>{w} </span>
+                  ))
+                : <span style={{ color: C.ink }}>{term.phrase}</span>}
+            </div>
+            <div style={{ fontSize: 13, color: C.inkSoft, marginTop: 4 }}>{term.phrasePt}</div>
+            {result && (
+              <div style={{ fontSize: 11.5, color: C.inkSoft, marginTop: 5 }}>
+                🟢 falou bem · 🔴 repita — <i>ouvi: "{result.transcript}"</i>
+              </div>
+            )}
+
+            <div style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap", marginTop: 12 }}>
+              <PronBtn onClick={() => speak(0.95)} label="🔊 Ouvir" />
+              <PronBtn onClick={() => speak(0.6)} label="🐢 Devagar" />
+              {listening ? (
+                <button onClick={stopListening}
+                  style={{ border: "none", borderRadius: 10, padding: "11px 18px", fontWeight: 700, fontSize: 14.5, background: starting ? C.goldDeep : C.bad, color: C.cream }}>
+                  {starting ? "⏳ Preparando…" : "⏹ Parar"}
+                </button>
+              ) : (
+                <button onClick={listen}
+                  style={{ border: "none", borderRadius: 10, padding: "11px 18px", fontWeight: 700, fontSize: 14.5, background: C.card, color: C.cream }}>
+                  🎤 Falar
+                </button>
+              )}
+            </div>
+
+            {listening && (
+              <div style={{ marginTop: 10, background: C.paper, borderRadius: 10, padding: "9px 11px" }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: starting ? C.goldDeep : C.bad }}>
+                  {starting ? "⏳ Preparando o microfone…" : "🔴 Ouvindo… fale e toque em Parar"}
+                </div>
+                {liveText && <div style={{ fontSize: 13, color: C.ink, fontStyle: "italic", marginTop: 4 }}>“{liveText}”</div>}
+              </div>
+            )}
+            {audioUrl && !listening && (
+              <div style={{ marginTop: 10, textAlign: "center" }}>
+                <PronBtn onClick={playMine} label="▶️ Ouvir minha fala" />
+                <audio ref={myAudioRef} src={audioUrl} preload="auto" style={{ display: "none" }} />
+              </div>
+            )}
+            {result && (
+              <div style={{ marginTop: 10, textAlign: "center" }}>
+                <span style={{ fontFamily: FONT_HEAD, fontSize: 22, fontWeight: 700, color: fb.c }}>{result.pct}%</span>
+                <span style={{ fontSize: 12.5, color: fb.c, fontWeight: 600, marginLeft: 8 }}>{fb.t}</span>
+              </div>
+            )}
+            {srError && (
+              <div style={{ marginTop: 10, fontSize: 12.5, color: C.bad, lineHeight: 1.5, background: "#FBF1EA", borderRadius: 10, padding: "9px 11px" }}>{srError}</div>
+            )}
+
+            {selfMode && (
+              <div style={{ marginTop: 10, borderTop: `1px solid ${C.line}`, paddingTop: 10 }}>
+                <div style={{ fontSize: 12.5, fontWeight: 700, color: C.card, marginBottom: 4, textAlign: "center" }}>🪞 Autoavaliação da fala</div>
+                <div style={{ fontSize: 11.5, color: C.inkSoft, textAlign: "center", marginBottom: 8, lineHeight: 1.4 }}>
+                  Toque em Ouvir, repita imitando o ritmo, e seja honesto:
+                </div>
+                <div style={{ display: "flex", gap: 8 }}>
+                  <button onClick={() => savePron(term.key, 80)}
+                    style={{ flex: 1, border: `1.5px solid ${C.ok}`, background: C.paper, color: C.ok, borderRadius: 10, padding: "10px 6px", fontWeight: 700, fontSize: 13 }}>
+                    ✓ Falei com confiança
+                  </button>
+                  <button onClick={() => savePron(term.key, 40)}
+                    style={{ flex: 1, border: `1.5px solid ${C.goldDeep}`, background: C.paper, color: C.goldDeep, borderRadius: 10, padding: "10px 6px", fontWeight: 700, fontSize: 13 }}>
+                    ↻ Preciso repetir
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+
+        </>
+      )}
+
+      {/* Avaliação SRS — sempre visível, já quando o termo em inglês aparece.
+          Você pode se avaliar de cara (se já sabe) ou ver o significado antes. */}
+      <div style={{ fontSize: 12, color: C.inkSoft, textAlign: "center", margin: "16px 0 8px", fontWeight: 600 }}>
+        {flipped ? "Quão bem você domina este termo?" : "Já sabe? Avalie — ou veja o significado antes."}
+      </div>
+      <div style={{ display: "flex", gap: 6 }}>
+        {RATINGS.map((rt, i) => (
+          <button key={i} onClick={() => onRate(i)}
+            style={{ flex: 1, border: "none", background: rt.color, color: "#fff", borderRadius: 10, padding: "10px 2px", fontWeight: 700, fontSize: 12.5, lineHeight: 1.25 }}>
+            {rt.label}
+            <span style={{ display: "block", fontSize: 10, fontWeight: 500, opacity: 0.9 }}>{rt.sub}</span>
+          </button>
+        ))}
+      </div>
+    </div>
   );
 }
 
