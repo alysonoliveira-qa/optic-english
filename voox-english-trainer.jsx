@@ -506,7 +506,7 @@ const PACE_STOPS = [
   { v: 12, label: "Arrojado",    hint: "puxado · ~25 dias" },
   { v: 15, label: "Lendário",    hint: "no limite · ~20 dias" },
 ];
-const DEFAULT_DAILY = { pace: 10, streak: 0, lastGoalDay: null, introduced: {} };
+const DEFAULT_DAILY = { pace: 10, streak: 0, bestStreak: 0, lastGoalDay: null, introduced: {} };
 
 const ymd = (d) => {
   const y = d.getFullYear();
@@ -955,6 +955,7 @@ export default function VooxEnglishTrainer() {
         const yesterday = ymd(addDays(new Date(), -1));
         daily.streak = daily.lastGoalDay === yesterday ? (daily.streak || 0) + 1 : 1;
         daily.lastGoalDay = today;
+        daily.bestStreak = Math.max(daily.bestStreak || 0, daily.streak);
       }
     }
     save({ ...data, srs, daily });
@@ -1905,13 +1906,35 @@ function MetaDoDiaTab({ terms, srs, pron, daily, studyCard, savePron, setPace })
   const newTermsRemaining = terms.filter((t) => !introduced[t.key]).length;
   const barPct = Math.min(100, Math.round((introducedToday / pace) * 100));
 
+  // Streak "vivo": quebra se o último dia batido não foi hoje nem ontem (virada de dia).
+  const yesterday = ymd(addDays(new Date(), -1));
+  const streakAlive = daily.lastGoalDay === today || daily.lastGoalDay === yesterday;
+  const streak = streakAlive ? (daily.streak || 0) : 0;
+  const bestStreak = daily.bestStreak || 0;
+  const MILESTONES = [3, 7, 14, 30];
+  const nextMilestone = MILESTONES.find((m) => m > streak);
+  const spokenWell = terms.filter((t) => (pron[t.key] || 0) >= 80).length;
+  const allGreen = terms.length > 0 && spokenWell === terms.length;
+
   return (
     <div>
+      {allGreen && (
+        <div style={{ background: C.ok, borderRadius: 14, padding: "14px 16px", marginBottom: 14, color: "#fff", textAlign: "center" }}>
+          <div style={{ fontFamily: FONT_HEAD, fontSize: 18, fontWeight: 700 }}>🎉 Fase 1 dominada na fala!</div>
+          <div style={{ fontSize: 12.5, marginTop: 3, color: "#EAF3EC" }}>
+            Todos os {terms.length} termos verdes. A prova do Júnior está liberada — role até o fim para fazê-la.
+          </div>
+        </div>
+      )}
+
       {/* Cabeçalho: streak + progresso do dia + ajuste de ritmo */}
       <div style={{ background: C.card, borderRadius: 14, padding: "14px 16px", marginBottom: 14, color: C.cream }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
           <span style={{ fontSize: 14.5, fontWeight: 700 }}>
-            🔥 {daily.streak || 0} {(daily.streak || 0) === 1 ? "dia seguido" : "dias seguidos"}
+            {streak > 0 ? "🔥" : "🌱"} {streak} {streak === 1 ? "dia seguido" : "dias seguidos"}
+            {bestStreak > streak && (
+              <span style={{ fontSize: 11.5, fontWeight: 600, color: C.gold, marginLeft: 6 }}>· recorde {bestStreak}</span>
+            )}
           </span>
           <button onClick={() => setShowPace((s) => !s)}
             style={{ background: "rgba(239,233,218,0.14)", border: "none", color: C.gold, borderRadius: 8, padding: "5px 10px", fontWeight: 700, fontSize: 12.5 }}>
@@ -1924,6 +1947,16 @@ function MetaDoDiaTab({ terms, srs, pron, daily, studyCard, savePron, setPace })
         <div style={{ fontSize: 12.5, color: "#DDE4DA", marginTop: 7 }}>
           {goalMet ? "✓ Meta do dia batida! " : ""}{introducedToday}/{pace} termos novos hoje · {totalIntroduced}/{terms.length} no total
         </div>
+        {streak > 0 && nextMilestone && (
+          <div style={{ fontSize: 11.5, color: C.gold, marginTop: 3 }}>
+            🏅 Faltam {nextMilestone - streak} {nextMilestone - streak === 1 ? "dia" : "dias"} para o marco de {nextMilestone} dias.
+          </div>
+        )}
+        {streak === 0 && bestStreak > 0 && (
+          <div style={{ fontSize: 11.5, color: C.gold, marginTop: 3 }}>
+            Streak zerado — bata a meta hoje para recomeçar. Seu recorde é {bestStreak} dias.
+          </div>
+        )}
 
         {showPace && (
           <div style={{ marginTop: 12, borderTop: "1px solid rgba(239,233,218,0.18)", paddingTop: 12 }}>
