@@ -658,11 +658,14 @@ function scorePronunciation(target, transcript, confidence) {
   const errors = dp[n][m];
   let wordPct = n ? Math.max(0, Math.round((1 - errors / n) * 100)) : 0;
 
+  // A acurácia das palavras é o que importa para o aprendiz e é o score principal.
+  // A "confiança" do reconhecedor é instável (muitos navegadores devolvem 0 ou
+  // valores arbitrários), então ela só dá um leve ajuste — no máximo -15%.
   let confPct = null;
   let pct = wordPct;
   if (typeof confidence === "number" && confidence > 0 && confidence <= 1) {
     confPct = Math.round(confidence * 100);
-    pct = Math.round(wordPct * (0.5 + 0.5 * confidence));
+    pct = Math.round(wordPct * (0.85 + 0.15 * confidence));
   }
 
   const displayHits = displayWords.map((w, di) => {
@@ -1176,17 +1179,45 @@ function SrsTab({ cards, srs, rateCard, quizUnlocked }) {
 function PronTab({ cards, pron, savePron }) {
   const [idx, setIdx] = useState(0);
   const [listening, setListening] = useState(false);
+  const [starting, setStarting] = useState(false); // mic pedido, mas ainda não engatou
+  const [liveText, setLiveText] = useState("");     // transcrição ao vivo
   const [result, setResult] = useState(null);
   const [srError, setSrError] = useState(null);
   const [selfMode, setSelfMode] = useState(false);
-  const recRef = useRef(null);
+  const [audioUrl, setAudioUrl] = useState(null);   // gravação da própria fala
+
+  const recRef = useRef(null);        // SpeechRecognition
+  const mediaRef = useRef(null);      // MediaRecorder
+  const streamRef = useRef(null);     // stream do getUserMedia
+  const chunksRef = useRef([]);
+  const finalRef = useRef("");        // transcrição final acumulada
+  const interimRef = useRef("");      // último trecho provisório (rede de segurança)
+  const confRef = useRef([]);         // confianças por resultado
+  const stopTimerRef = useRef(null);
+  const startFallbackRef = useRef(null);
+  const audioUrlRef = useRef(null);
+  const myAudioRef = useRef(null);    // <audio> da própria gravação
 
   const SR = typeof window !== "undefined" ? (window.SpeechRecognition || window.webkitSpeechRecognition) : null;
   const card = cards[idx];
   const best = pron[card.key] || 0;
 
-  useEffect(() => () => { try { recRef.current && recRef.current.abort(); } catch (e) {} }, []);
-  useEffect(() => { setResult(null); setSrError(null); }, [idx]);
+  useEffect(() => { audioUrlRef.current = audioUrl; }, [audioUrl]);
+
+  useEffect(() => () => {
+    try { recRef.current && recRef.current.abort(); } catch (e) {}
+    try { if (mediaRef.current && mediaRef.current.state !== "inactive") mediaRef.current.stop(); } catch (e) {}
+    try { streamRef.current && streamRef.current.getTracks().forEach((t) => t.stop()); } catch (e) {}
+    if (stopTimerRef.current) clearTimeout(stopTimerRef.current);
+    if (startFallbackRef.current) clearTimeout(startFallbackRef.current);
+    if (audioUrlRef.current) URL.revokeObjectURL(audioUrlRef.current);
+  }, []);
+
+  // Trocar de frase zera tudo e descarta a gravação anterior.
+  useEffect(() => {
+    setResult(null); setSrError(null); setLiveText(""); setSelfMode(false);
+    setAudioUrl((u) => { if (u) URL.revokeObjectURL(u); return null; });
+  }, [idx]);
 
   const speak = (rate) => {
     try {
@@ -1203,55 +1234,156 @@ function PronTab({ cards, pron, savePron }) {
     }
   };
 
-  const listen = async () => {
-    if (!SR) {
-      setSrError("Reconhecimento de voz não disponível neste ambiente.");
-      setSelfMode(true);
-      return;
+  const playMine = () => {
+    try {
+      window.speechSynthesis.cancel();
+      if (myAudioRef.current) { myAudioRef.current.currentTime = 0; myAudioRef.current.play(); }
+    } catch (e) {}
+  };
+
+  // Encerra a captura: para gravação/stream, gera o áudio e pontua o que foi dito.
+  const finishListening = (errored) => {
+    if (stopTimerRef.current) { clearTimeout(stopTimerRef.current); stopTimerRef.current = null; }
+    if (startFallbackRef.current) { clearTimeout(startFallbackRef.current); startFallbackRef.current = null; }
+    setListening(false);
+    setStarting(false);
+    try { if (mediaRef.current && mediaRef.current.state !== "inactive") mediaRef.current.stop(); } catch (e) {}
+    try { if (streamRef.current) streamRef.current.getTracks().forEach((t) => t.stop()); } catch (e) {}
+    streamRef.current = null;
+
+    const transcript = (finalRef.current + " " + interimRef.current).trim();
+    if (!errored && transcript) {
+      const avgConf = confRef.current.length
+        ? confRef.current.reduce((a, b) => a + b, 0) / confRef.current.length
+        : 0;
+      const s = scorePronunciation(card.en, transcript, avgConf);
+      const full = { ...s, transcript };
+      setResult(full);
+      savePron(card.key, full.pct);
     }
+  };
+
+  const stopListening = () => {
+    if (stopTimerRef.current) { clearTimeout(stopTimerRef.current); stopTimerRef.current = null; }
+    if (recRef.current) {
+      try { recRef.current.stop(); } catch (e) { finishListening(false); }
+    } else {
+      finishListening(false); // caminho sem reconhecimento (só gravação)
+    }
+  };
+
+  const listen = async () => {
+    setResult(null); setSrError(null); setLiveText("");
+    finalRef.current = ""; interimRef.current = ""; confRef.current = [];
+    setAudioUrl((u) => { if (u) URL.revokeObjectURL(u); return null; });
+
+    // 1. Abre o mic e mantém o stream — a nossa gravação captura o áudio COMPLETO,
+    //    mesmo que o reconhecedor corte o começo/fim.
+    let stream = null;
     try {
       if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        stream.getTracks().forEach((t) => t.stop());
+        stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        streamRef.current = stream;
       }
     } catch (e) {
       setSrError("O microfone está bloqueado neste ambiente (limitação do app, não do seu celular). Use o modo autoavaliação abaixo — ou rode o app publicado no navegador para liberar o mic.");
       setSelfMode(true);
       return;
     }
+
+    // 2. Grava para você poder OUVIR sua própria fala e comparar com o nativo.
+    try {
+      if (stream && typeof MediaRecorder !== "undefined") {
+        chunksRef.current = [];
+        const mr = new MediaRecorder(stream);
+        mediaRef.current = mr;
+        mr.ondataavailable = (e) => { if (e.data && e.data.size) chunksRef.current.push(e.data); };
+        mr.onstop = () => {
+          try {
+            if (chunksRef.current.length) {
+              const blob = new Blob(chunksRef.current, { type: chunksRef.current[0].type || "audio/webm" });
+              setAudioUrl(URL.createObjectURL(blob));
+            }
+          } catch (e) {}
+        };
+        mr.start();
+      }
+    } catch (e) { /* gravação é opcional */ }
+
+    // 3. Sem reconhecimento: ainda dá pra gravar, ouvir e autoavaliar.
+    if (!SR) {
+      setSelfMode(true);
+      setStarting(false);
+      setListening(true);
+      setSrError("Reconhecimento de voz não disponível aqui — mas você pode gravar, ouvir e comparar com o nativo.");
+      return;
+    }
+
+    // 4. Reconhecimento em modo CONTÍNUO: não encerra no primeiro silêncio,
+    //    então não corta o fim da frase. Você encerra tocando em Parar.
     try {
       const rec = new SR();
       recRef.current = rec;
       rec.lang = "en-US";
-      rec.interimResults = false;
+      rec.continuous = true;
+      rec.interimResults = true;
       rec.maxAlternatives = 1;
+      setStarting(true);
       setListening(true);
-      setResult(null);
-      setSrError(null);
+
+      // Só mostra "fale agora" quando o mic realmente engatou — evita cortar o início.
+      // Alguns navegadores não disparam onaudiostart de forma confiável, então há um
+      // fallback que libera o estado depois de 1,2s para o botão Parar nunca travar.
+      rec.onaudiostart = () => setStarting(false);
+      rec.onspeechstart = () => setStarting(false);
+      startFallbackRef.current = setTimeout(() => setStarting(false), 1200);
+
       rec.onresult = (ev) => {
-        const top = ev.results[0][0];
-        const s = scorePronunciation(card.en, top.transcript, top.confidence);
-        const full = { ...s, transcript: top.transcript };
-        setResult(full);
-        savePron(card.key, full.pct);
-        setListening(false);
+        let interim = "";
+        for (let k = ev.resultIndex; k < ev.results.length; k++) {
+          const r = ev.results[k];
+          if (r.isFinal) {
+            finalRef.current += r[0].transcript + " ";
+            if (typeof r[0].confidence === "number" && r[0].confidence > 0) confRef.current.push(r[0].confidence);
+          } else {
+            interim += r[0].transcript;
+          }
+        }
+        interimRef.current = interim;
+        setLiveText((finalRef.current + interim).trim());
       };
       rec.onerror = (ev) => {
-        setListening(false);
         if (ev.error === "not-allowed" || ev.error === "service-not-allowed") {
           setSrError("Permissão do microfone negada pelo ambiente. Use o modo autoavaliação abaixo.");
           setSelfMode(true);
+          finishListening(true);
         } else if (ev.error === "no-speech") {
-          setSrError("Não ouvi nada. Tente falar mais perto do microfone.");
-        } else {
-          setSrError("Erro no reconhecimento de voz. Tente de novo.");
+          setSrError("Ainda não ouvi nada — chegue mais perto e fale.");
+        } else if (ev.error === "audio-capture") {
+          setSrError("O microfone está ocupado (a gravação e o reconhecedor brigaram por ele). Toque em Falar de novo.");
+        } else if (ev.error === "network") {
+          // Brave (e alguns navegadores) removem o serviço de fala do Google -> erro
+          // "network" imediato. Não adianta repetir: cai no modo gravar + autoavaliar,
+          // que funciona aqui. A nota por voz só roda no Chrome ou Edge.
+          setSrError("Este navegador não faz nota por voz (o Brave bloqueia o serviço de fala do Google). Para a nota automática, use Chrome ou Edge. Aqui você pode gravar, ouvir e se autoavaliar 👇");
+          setSelfMode(true);
+          finishListening(true);
+        } else if (ev.error !== "aborted") {
+          setSrError("Erro no reconhecimento de voz (" + ev.error + "). Tente de novo.");
         }
       };
-      rec.onend = () => setListening(false);
+      rec.onend = () => finishListening(false);
       rec.start();
+
+      // Rede de segurança: para sozinho em 20s se algo travar.
+      stopTimerRef.current = setTimeout(() => { try { rec.stop(); } catch (e) {} }, 20000);
     } catch (e) {
       setListening(false);
+      setStarting(false);
       setSrError("Não consegui iniciar o microfone neste navegador.");
+      try { if (mediaRef.current && mediaRef.current.state !== "inactive") mediaRef.current.stop(); } catch (e2) {}
+      try { if (streamRef.current) streamRef.current.getTracks().forEach((t) => t.stop()); } catch (e2) {}
+      streamRef.current = null;
     }
   };
 
@@ -1265,13 +1397,13 @@ function PronTab({ cards, pron, savePron }) {
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-        <button onClick={() => setIdx(Math.max(0, idx - 1))} disabled={idx === 0}
-          style={{ background: "none", border: "none", color: idx === 0 ? C.line : C.goldDeep, fontWeight: 700, fontSize: 14 }}>
+        <button onClick={() => setIdx(Math.max(0, idx - 1))} disabled={idx === 0 || listening}
+          style={{ background: "none", border: "none", color: (idx === 0 || listening) ? C.line : C.goldDeep, fontWeight: 700, fontSize: 14 }}>
           ← Anterior
         </button>
         <span style={{ fontSize: 13, fontWeight: 700, color: C.inkSoft }}>{idx + 1}/{cards.length}</span>
-        <button onClick={() => setIdx(Math.min(cards.length - 1, idx + 1))} disabled={idx === cards.length - 1}
-          style={{ background: "none", border: "none", color: idx === cards.length - 1 ? C.line : C.goldDeep, fontWeight: 700, fontSize: 14 }}>
+        <button onClick={() => setIdx(Math.min(cards.length - 1, idx + 1))} disabled={idx === cards.length - 1 || listening}
+          style={{ background: "none", border: "none", color: (idx === cards.length - 1 || listening) ? C.line : C.goldDeep, fontWeight: 700, fontSize: 14 }}>
           Próxima →
         </button>
       </div>
@@ -1292,17 +1424,46 @@ function PronTab({ cards, pron, savePron }) {
         <div style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap" }}>
           <PronBtn onClick={() => speak(0.95)} label="🔊 Ouvir" />
           <PronBtn onClick={() => speak(0.6)} label="🐢 Devagar" />
-          <button
-            onClick={listen}
-            disabled={listening}
-            style={{
-              border: "none", borderRadius: 10, padding: "11px 18px", fontWeight: 700, fontSize: 14.5,
-              background: listening ? C.bad : C.card, color: C.cream,
-            }}
-          >
-            {listening ? "🔴 Ouvindo… fale agora" : "🎤 Falar"}
-          </button>
+          {listening ? (
+            <button
+              onClick={stopListening}
+              style={{
+                border: "none", borderRadius: 10, padding: "11px 18px", fontWeight: 700, fontSize: 14.5,
+                background: starting ? C.goldDeep : C.bad, color: C.cream,
+              }}
+            >
+              {starting ? "⏳ Preparando… (toque p/ parar)" : "⏹ Parar"}
+            </button>
+          ) : (
+            <button
+              onClick={listen}
+              style={{
+                border: "none", borderRadius: 10, padding: "11px 18px", fontWeight: 700, fontSize: 14.5,
+                background: C.card, color: C.cream,
+              }}
+            >
+              🎤 Falar
+            </button>
+          )}
         </div>
+
+        {listening && (
+          <div style={{ marginTop: 12, background: C.bg, borderRadius: 10, padding: "10px 12px" }}>
+            <div style={{ fontSize: 12.5, fontWeight: 700, color: starting ? C.goldDeep : C.bad, marginBottom: liveText ? 4 : 0 }}>
+              {starting ? "⏳ Preparando o microfone…" : "🔴 Ouvindo… fale agora e toque em Parar ao terminar"}
+            </div>
+            {liveText && (
+              <div style={{ fontSize: 13.5, color: C.ink, fontStyle: "italic", lineHeight: 1.5 }}>“{liveText}”</div>
+            )}
+          </div>
+        )}
+
+        {audioUrl && !listening && (
+          <div style={{ marginTop: 12 }}>
+            <PronBtn onClick={playMine} label="▶️ Ouvir minha fala" />
+            <audio ref={myAudioRef} src={audioUrl} preload="auto" style={{ display: "none" }} />
+          </div>
+        )}
 
         {best > 0 && !result && (
           <div style={{ fontSize: 12.5, color: C.inkSoft, marginTop: 12 }}>Sua melhor nota nesta frase: <b style={{ color: best >= 80 ? C.ok : C.goldDeep }}>{best}%</b></div>
