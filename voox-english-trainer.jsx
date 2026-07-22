@@ -488,6 +488,56 @@ const RATINGS = [
   { label: "Muito fácil", sub: "4 dias", color: "#2E6E4E", interval: 4 * 24 * 60 * 60 * 1000 },
 ];
 
+// ===================== META DO DIA (ritmo da Fase 1) =====================
+// Faixas do slider de termos NOVOS por dia. 300 termos ÷ 10/dia ≈ 30 dias.
+const PACE_STOPS = [
+  { v: 6,  label: "Rápido",      hint: "dose leve · ~50 dias" },
+  { v: 8,  label: "Equilibrado", hint: "constante · ~38 dias" },
+  { v: 10, label: "Ideal",       hint: "recomendado · ~30 dias" },
+  { v: 12, label: "Arrojado",    hint: "puxado · ~25 dias" },
+  { v: 15, label: "Lendário",    hint: "no limite · ~20 dias" },
+];
+const DEFAULT_DAILY = { pace: 10, streak: 0, lastGoalDay: null, introduced: {} };
+
+const ymd = (d) => {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+};
+const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+
+// ===================== TERMOS DA FASE 1 (deck híbrido) =====================
+// Amostra de ~20 termos p/ validar o formato. Cada termo vem ancorado numa frase
+// de atendimento real. Fase B escala isto até ~300 (extraindo das 199 frases + novos).
+// role: "you" = fala do vendedor · "cust" = fala do cliente.
+const FASE1_TERMS = [
+  // — Recepção —
+  { key: "f1-welcome",      theme: "Recepção",   role: "you",  term: "welcome",          termPt: "bem-vindo(a)",           phrase: "Welcome! How can I help you?",              phrasePt: "Bem-vindo! Como posso ajudar?" },
+  { key: "f1-help",         theme: "Recepção",   role: "you",  term: "to help",           termPt: "ajudar",                 phrase: "How can I help you today?",                 phrasePt: "Como posso te ajudar hoje?" },
+  { key: "f1-glasses",      theme: "Recepção",   role: "cust", term: "glasses",           termPt: "óculos",                 phrase: "I'm looking for new glasses.",              phrasePt: "Estou procurando óculos novos." },
+  { key: "f1-sunglasses",   theme: "Recepção",   role: "you",  term: "sunglasses",        termPt: "óculos de sol",          phrase: "Are you looking for glasses or sunglasses?", phrasePt: "Você procura óculos de grau ou de sol?" },
+  { key: "f1-prescription", theme: "Recepção",   role: "you",  term: "prescription",      termPt: "receita / grau",         phrase: "Do you have your prescription?",            phrasePt: "Você tem sua receita?" },
+  { key: "f1-moment",       theme: "Recepção",   role: "you",  term: "one moment",        termPt: "um momento",             phrase: "One moment, please.",                       phrasePt: "Um momento, por favor." },
+  // — Armação —
+  { key: "f1-frame",        theme: "Armação",    role: "you",  term: "frame",             termPt: "armação",                phrase: "This frame looks great on you.",            phrasePt: "Essa armação ficou ótima em você." },
+  { key: "f1-frame-fit",    theme: "Armação",    role: "you",  term: "to fit",            termPt: "servir / encaixar",      phrase: "This frame fits you very well.",            phrasePt: "Essa armação te serve muito bem." },
+  { key: "f1-lightweight",  theme: "Armação",    role: "you",  term: "lightweight",       termPt: "leve",                   phrase: "This frame is very lightweight.",           phrasePt: "Essa armação é bem leve." },
+  // — Lentes e tratamentos —
+  { key: "f1-lens",         theme: "Lentes",     role: "you",  term: "lens",              termPt: "lente",                  phrase: "This lens is very thin and light.",         phrasePt: "Essa lente é bem fina e leve." },
+  { key: "f1-lenses-ready", theme: "Lentes",     role: "you",  term: "lenses",            termPt: "lentes (par)",           phrase: "Your lenses are ready.",                    phrasePt: "Suas lentes estão prontas." },
+  { key: "f1-coating",      theme: "Lentes",     role: "you",  term: "coating",           termPt: "tratamento / camada",    phrase: "Would you like anti-reflective coating?",   phrasePt: "Gostaria de tratamento antirreflexo?" },
+  { key: "f1-antiglare",    theme: "Lentes",     role: "you",  term: "anti-reflective",   termPt: "antirreflexo",           phrase: "Anti-reflective lenses reduce glare.",      phrasePt: "Lentes antirreflexo reduzem o reflexo." },
+  { key: "f1-bluelight",    theme: "Lentes",     role: "you",  term: "blue light",        termPt: "luz azul",               phrase: "These lenses filter blue light from screens.", phrasePt: "Essas lentes filtram a luz azul das telas." },
+  { key: "f1-scratch",      theme: "Lentes",     role: "you",  term: "scratch-resistant", termPt: "antirrisco",             phrase: "The coating is scratch-resistant.",         phrasePt: "O tratamento é antirrisco." },
+  { key: "f1-photochromic", theme: "Lentes",     role: "you",  term: "photochromic",      termPt: "fotossensível",          phrase: "Photochromic lenses darken in the sun.",    phrasePt: "Lentes fotossensíveis escurecem no sol." },
+  { key: "f1-progressive",  theme: "Lentes",     role: "you",  term: "progressive",       termPt: "multifocal / progressiva", phrase: "Do you need progressive lenses?",         phrasePt: "Você precisa de lentes multifocais?" },
+  // — Preço e pagamento —
+  { key: "f1-total",        theme: "Pagamento",  role: "you",  term: "total",             termPt: "total",                  phrase: "The total is five hundred reais.",          phrasePt: "O total é quinhentos reais." },
+  { key: "f1-installments", theme: "Pagamento",  role: "cust", term: "installments",      termPt: "parcelas",               phrase: "Do you take installments?",                 phrasePt: "Vocês parcelam?" },
+  { key: "f1-receipt",      theme: "Pagamento",  role: "you",  term: "receipt",           termPt: "comprovante",            phrase: "Here's your receipt.",                      phrasePt: "Aqui está seu comprovante." },
+];
+
 // ===================== DINÂMICAS =====================
 const DYNAMICS = {
   1: {
@@ -682,7 +732,7 @@ export default function VooxEnglishTrainer() {
   const [view, setView] = useState("home"); // home | level | quiz
   const [tab, setTab] = useState("read");   // read | srs | pron | dyn
   const [levelId, setLevelId] = useState(1);
-  const [data, setData] = useState({ unlocked: 1, best: {}, srs: {}, pron: {}, dyn: {} });
+  const [data, setData] = useState({ unlocked: 1, best: {}, srs: {}, pron: {}, dyn: {}, daily: DEFAULT_DAILY });
   const [loaded, setLoaded] = useState(false);
   const [showFixes, setShowFixes] = useState(false);
 
@@ -698,7 +748,7 @@ export default function VooxEnglishTrainer() {
         const r = await window.storage.get(STORAGE_KEY);
         if (r && r.value) {
           const p = JSON.parse(r.value);
-          if (p && p.unlocked) setData({ srs: {}, pron: {}, best: {}, dyn: {}, ...p });
+          if (p && p.unlocked) setData({ srs: {}, pron: {}, best: {}, dyn: {}, ...p, daily: { ...DEFAULT_DAILY, ...(p.daily || {}) } });
         }
       } catch (e) { /* primeira vez */ }
       setLoaded(true);
@@ -714,7 +764,12 @@ export default function VooxEnglishTrainer() {
   const level = LEVELS.find((l) => l.id === levelId);
   const cards = level ? getCards(level) : [];
   const easyCount = cards.filter((c) => (data.srs[c.key]?.r ?? -1) >= 2).length;
-  const quizUnlocked = cards.length > 0 && easyCount === cards.length;
+  // Fase 1: a prova só libera com TODOS os termos falados bem (mapa da fala 100% verde).
+  // Demais níveis: mantém o critério de todos os cards em Fácil/Muito fácil.
+  const spokenWell = FASE1_TERMS.filter((t) => (data.pron[t.key] || 0) >= 80).length;
+  const quizUnlocked = level && level.id === 1
+    ? FASE1_TERMS.length > 0 && spokenWell === FASE1_TERMS.length
+    : cards.length > 0 && easyCount === cards.length;
 
   const openLevel = (id) => { setLevelId(id); setTab("read"); setView("level"); };
 
@@ -722,6 +777,28 @@ export default function VooxEnglishTrainer() {
     const srs = { ...data.srs, [key]: { r, due: Date.now() + RATINGS[r].interval } };
     save({ ...data, srs });
   };
+
+  // Estuda um termo da Fase 1: grava a nota SRS e, se for a 1ª vez (termo novo),
+  // marca a data de introdução e atualiza o streak quando a meta do dia é batida.
+  const studyCard = (key, r, wasNew) => {
+    const srs = { ...data.srs, [key]: { r, due: Date.now() + RATINGS[r].interval } };
+    const daily = { ...DEFAULT_DAILY, ...(data.daily || {}) };
+    daily.introduced = { ...(daily.introduced || {}) };
+    if (wasNew && !daily.introduced[key]) {
+      const today = ymd(new Date());
+      daily.introduced[key] = today;
+      const introducedToday = Object.values(daily.introduced).filter((d) => d === today).length;
+      const newRemaining = FASE1_TERMS.filter((t) => !daily.introduced[t.key]).length;
+      if ((introducedToday >= daily.pace || newRemaining === 0) && daily.lastGoalDay !== today) {
+        const yesterday = ymd(addDays(new Date(), -1));
+        daily.streak = daily.lastGoalDay === yesterday ? (daily.streak || 0) + 1 : 1;
+        daily.lastGoalDay = today;
+      }
+    }
+    save({ ...data, srs, daily });
+  };
+
+  const setPace = (v) => save({ ...data, daily: { ...DEFAULT_DAILY, ...(data.daily || {}), pace: v } });
 
   const savePron = (key, pct) => {
     const prev = data.pron[key] || 0;
@@ -752,7 +829,7 @@ export default function VooxEnglishTrainer() {
   };
 
   const resetAll = async () => {
-    await save({ unlocked: 1, best: {}, srs: {}, pron: {}, dyn: {} });
+    await save({ unlocked: 1, best: {}, srs: {}, pron: {}, dyn: {}, daily: DEFAULT_DAILY });
     setView("home");
   };
 
@@ -775,6 +852,7 @@ export default function VooxEnglishTrainer() {
           cards={cards} easyCount={easyCount} quizUnlocked={quizUnlocked}
           onBack={() => setView("home")} onQuiz={startQuiz}
           rateCard={rateCard} savePron={savePron} saveDyn={saveDyn}
+          studyCard={studyCard} setPace={setPace}
         />
       )}
       {view === "quiz" && level && (
@@ -898,8 +976,13 @@ function Home({ data, onOpen, showFixes, setShowFixes, onReset }) {
 }
 
 // ===================== LEVEL VIEW (abas) =====================
-function LevelView({ level, tab, setTab, data, cards, easyCount, quizUnlocked, onBack, onQuiz, rateCard, savePron, saveDyn }) {
+function LevelView({ level, tab, setTab, data, cards, easyCount, quizUnlocked, onBack, onQuiz, rateCard, savePron, saveDyn, studyCard, setPace }) {
   const pass = passFor(level);
+  const isFase1 = level.id === 1;
+  const daily = data.daily || DEFAULT_DAILY;
+  const today = ymd(new Date());
+  const introducedToday = Object.values(daily.introduced || {}).filter((d) => d === today).length;
+  const fase1SpokenWell = FASE1_TERMS.filter((t) => (data.pron[t.key] || 0) >= 80).length;
   return (
     <div>
       <button onClick={onBack} style={{ background: "none", border: "none", color: C.goldDeep, fontWeight: 700, fontSize: 14, padding: 0, marginBottom: 12 }}>
@@ -915,14 +998,24 @@ function LevelView({ level, tab, setTab, data, cards, easyCount, quizUnlocked, o
 
       <div style={{ display: "flex", gap: 5, marginBottom: 18 }}>
         <TabBtn active={tab === "read"} onClick={() => setTab("read")} label="📖 Script" />
-        <TabBtn active={tab === "srs"} onClick={() => setTab("srs")} label="🃏 Cards" badge={`${easyCount}/${cards.length}`} done={quizUnlocked} />
-        <TabBtn active={tab === "pron"} onClick={() => setTab("pron")} label="🎤 Fala" />
+        {isFase1 ? (
+          <TabBtn active={tab === "meta"} onClick={() => setTab("meta")} label="🎯 Meta do dia" badge={`${introducedToday}/${daily.pace}`} />
+        ) : (
+          <>
+            <TabBtn active={tab === "srs"} onClick={() => setTab("srs")} label="🃏 Cards" badge={`${easyCount}/${cards.length}`} done={quizUnlocked} />
+            <TabBtn active={tab === "pron"} onClick={() => setTab("pron")} label="🎤 Fala" />
+          </>
+        )}
         <TabBtn active={tab === "dyn"} onClick={() => setTab("dyn")} label="🎭 Dinâmica" />
       </div>
 
       {tab === "read" && <ReadTab level={level} />}
-      {tab === "srs" && <SrsTab cards={cards} srs={data.srs} rateCard={rateCard} quizUnlocked={quizUnlocked} />}
-      {tab === "pron" && <PronTab cards={cards.filter((c) => c.type === "you")} pron={data.pron} savePron={savePron} />}
+      {tab === "meta" && isFase1 && (
+        <MetaDoDiaTab terms={FASE1_TERMS} srs={data.srs} pron={data.pron} daily={daily}
+          studyCard={studyCard} savePron={savePron} setPace={setPace} />
+      )}
+      {tab === "srs" && !isFase1 && <SrsTab cards={cards} srs={data.srs} rateCard={rateCard} quizUnlocked={quizUnlocked} />}
+      {tab === "pron" && !isFase1 && <PronTab cards={cards.filter((c) => c.type === "you")} pron={data.pron} savePron={savePron} />}
       {tab === "dyn" && <DynTab level={level} best={data.dyn[level.id]} saveDyn={saveDyn} />}
 
       <div style={{ marginTop: 22 }}>
@@ -937,11 +1030,17 @@ function LevelView({ level, tab, setTab, data, cards, easyCount, quizUnlocked, o
             boxShadow: quizUnlocked ? "0 4px 12px rgba(200,169,110,0.4)" : "none",
           }}
         >
-          {quizUnlocked ? `Fazer a prova do Nível ${level.id}` : `🔒 Prova travada — ${easyCount}/${cards.length} cards fáceis`}
+          {quizUnlocked
+            ? `Fazer a prova do Nível ${level.id}`
+            : isFase1
+              ? `🔒 Prova travada — ${fase1SpokenWell}/${FASE1_TERMS.length} termos falados bem`
+              : `🔒 Prova travada — ${easyCount}/${cards.length} cards fáceis`}
         </button>
         <p style={{ textAlign: "center", fontSize: 12.5, color: C.inkSoft, marginTop: 8, lineHeight: 1.5 }}>
-          A prova libera com 100% dos cards em Fácil ou Muito fácil.
-          Precisa de {pass}/{level.quiz.length} para {level.id < 3 ? "desbloquear o próximo nível" : "concluir o treinamento"}.
+          {isFase1
+            ? "A prova libera quando TODOS os termos ficarem verdes no mapa da fala (falados com ≥80%)."
+            : "A prova libera com 100% dos cards em Fácil ou Muito fácil."}
+          {" "}Precisa de {pass}/{level.quiz.length} para {level.id < 3 ? "desbloquear o próximo nível" : "concluir o treinamento"}.
           {data.best[level.id] !== undefined ? ` Sua melhor nota: ${data.best[level.id]}/${level.quiz.length}.` : ""}
         </p>
       </div>
@@ -1175,9 +1274,11 @@ function SrsTab({ cards, srs, rateCard, quizUnlocked }) {
   );
 }
 
-// ===================== ABA PRONÚNCIA =====================
-function PronTab({ cards, pron, savePron }) {
-  const [idx, setIdx] = useState(0);
+// ===================== MOTOR DE FALA (reaproveitável) =====================
+// Encapsula TTS (ouvir), reconhecimento de voz (nota) e gravação da própria fala.
+// Usado pelo PronTab e pelo card híbrido da Fase 1. `targetEn` é a frase-alvo a
+// pontuar; `onScore(pct, result)` é chamado quando há uma nota nova.
+function useSpeech(targetEn, onScore) {
   const [listening, setListening] = useState(false);
   const [starting, setStarting] = useState(false); // mic pedido, mas ainda não engatou
   const [liveText, setLiveText] = useState("");     // transcrição ao vivo
@@ -1197,10 +1298,10 @@ function PronTab({ cards, pron, savePron }) {
   const startFallbackRef = useRef(null);
   const audioUrlRef = useRef(null);
   const myAudioRef = useRef(null);    // <audio> da própria gravação
+  const onScoreRef = useRef(onScore);
+  useEffect(() => { onScoreRef.current = onScore; });
 
   const SR = typeof window !== "undefined" ? (window.SpeechRecognition || window.webkitSpeechRecognition) : null;
-  const card = cards[idx];
-  const best = pron[card.key] || 0;
 
   useEffect(() => { audioUrlRef.current = audioUrl; }, [audioUrl]);
 
@@ -1213,16 +1314,16 @@ function PronTab({ cards, pron, savePron }) {
     if (audioUrlRef.current) URL.revokeObjectURL(audioUrlRef.current);
   }, []);
 
-  // Trocar de frase zera tudo e descarta a gravação anterior.
+  // Trocar de alvo zera tudo e descarta a gravação anterior.
   useEffect(() => {
     setResult(null); setSrError(null); setLiveText(""); setSelfMode(false);
     setAudioUrl((u) => { if (u) URL.revokeObjectURL(u); return null; });
-  }, [idx]);
+  }, [targetEn]);
 
   const speak = (rate) => {
     try {
       window.speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(card.en);
+      const u = new SpeechSynthesisUtterance(targetEn);
       u.lang = "en-US";
       u.rate = rate;
       const voices = window.speechSynthesis.getVoices();
@@ -1256,10 +1357,10 @@ function PronTab({ cards, pron, savePron }) {
       const avgConf = confRef.current.length
         ? confRef.current.reduce((a, b) => a + b, 0) / confRef.current.length
         : 0;
-      const s = scorePronunciation(card.en, transcript, avgConf);
+      const s = scorePronunciation(targetEn, transcript, avgConf);
       const full = { ...s, transcript };
       setResult(full);
-      savePron(card.key, full.pct);
+      if (onScoreRef.current) onScoreRef.current(full.pct, full);
     }
   };
 
@@ -1386,6 +1487,19 @@ function PronTab({ cards, pron, savePron }) {
       streamRef.current = null;
     }
   };
+
+  return { SR, listening, starting, liveText, result, srError, selfMode, audioUrl, myAudioRef, speak, playMine, listen, stopListening };
+}
+
+// ===================== ABA PRONÚNCIA =====================
+function PronTab({ cards, pron, savePron }) {
+  const [idx, setIdx] = useState(0);
+  const card = cards[idx];
+  const best = pron[card.key] || 0;
+  const {
+    listening, starting, liveText, result, srError, selfMode, audioUrl,
+    myAudioRef, speak, playMine, listen, stopListening,
+  } = useSpeech(card.en, (pct) => savePron(card.key, pct));
 
   const feedback = (pct) =>
     pct >= 80 ? { txt: "Excelente! Pronúncia clara.", color: C.ok }
@@ -1558,6 +1672,336 @@ function PronBtn({ onClick, label }) {
     >
       {label}
     </button>
+  );
+}
+
+// ===================== ABA META DO DIA (deck híbrido da Fase 1) =====================
+function MetaDoDiaTab({ terms, srs, pron, daily, studyCard, savePron, setPace }) {
+  const [queue, setQueue] = useState([]);       // [{ key, isNew }]
+  const [sessionDone, setSessionDone] = useState(false);
+  const [showPace, setShowPace] = useState(false);
+
+  const today = ymd(new Date());
+  const introduced = daily.introduced || {};
+  const introducedToday = Object.values(introduced).filter((d) => d === today).length;
+  const totalIntroduced = Object.keys(introduced).length;
+  const pace = daily.pace;
+  const goalMet = introducedToday >= pace;
+
+  // Monta a sessão UMA vez ao abrir a aba: termos novos até bater a cota do dia,
+  // depois as revisões vencidas (repetição espaçada).
+  useEffect(() => {
+    const now = Date.now();
+    const isIntro = (k) => !!introduced[k];
+    const newQuota = Math.max(0, pace - introducedToday);
+    const newBatch = terms.filter((t) => !isIntro(t.key)).slice(0, newQuota).map((t) => ({ key: t.key, isNew: true }));
+    const reviews = terms.filter((t) => {
+      if (!isIntro(t.key)) return false;
+      const s = srs[t.key];
+      if (!s) return true;
+      if (s.r < 2) return true;
+      return s.due <= now;
+    }).map((t) => ({ key: t.key, isNew: false }));
+    const q = [...newBatch, ...reviews];
+    setQueue(q);
+    setSessionDone(q.length === 0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const byKey = (k) => terms.find((t) => t.key === k);
+  const currentItem = queue[0];
+  const current = currentItem ? byKey(currentItem.key) : null;
+  const newsLeft = queue.filter((q) => q.isNew).length;
+  const reviewsLeft = queue.filter((q) => !q.isNew).length;
+
+  const handleRate = (r) => {
+    if (!currentItem) return;
+    studyCard(currentItem.key, r, currentItem.isNew);
+    setQueue((q) => {
+      const rest = q.slice(1);
+      if (r === 0) { const nq = [...rest]; nq.splice(Math.min(3, nq.length), 0, currentItem); return nq; } // "De novo" volta pra fila
+      if (rest.length === 0) setSessionDone(true);
+      return rest;
+    });
+  };
+
+  const pullMore = () => {
+    const next = terms
+      .filter((t) => !introduced[t.key] && !queue.some((q) => q.key === t.key))
+      .slice(0, pace)
+      .map((t) => ({ key: t.key, isNew: true }));
+    if (next.length) { setQueue(next); setSessionDone(false); }
+  };
+
+  // Praticar um termo específico ao tocar no quadradinho do mapa.
+  const studyOne = (key) => {
+    const isNew = !introduced[key];
+    setQueue((q) => [{ key, isNew }, ...q.filter((x) => x.key !== key)]);
+    setSessionDone(false);
+  };
+
+  const newTermsRemaining = terms.filter((t) => !introduced[t.key]).length;
+  const barPct = Math.min(100, Math.round((introducedToday / pace) * 100));
+
+  return (
+    <div>
+      {/* Cabeçalho: streak + progresso do dia + ajuste de ritmo */}
+      <div style={{ background: C.card, borderRadius: 14, padding: "14px 16px", marginBottom: 14, color: C.cream }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+          <span style={{ fontSize: 14.5, fontWeight: 700 }}>
+            🔥 {daily.streak || 0} {(daily.streak || 0) === 1 ? "dia seguido" : "dias seguidos"}
+          </span>
+          <button onClick={() => setShowPace((s) => !s)}
+            style={{ background: "rgba(239,233,218,0.14)", border: "none", color: C.gold, borderRadius: 8, padding: "5px 10px", fontWeight: 700, fontSize: 12.5 }}>
+            ⚙️ Ritmo: {pace}/dia
+          </button>
+        </div>
+        <div style={{ height: 9, background: "rgba(0,0,0,0.25)", borderRadius: 5, overflow: "hidden" }}>
+          <div style={{ height: "100%", width: `${barPct}%`, background: goalMet ? C.okSoft : C.gold, borderRadius: 5, transition: "width .3s ease" }} />
+        </div>
+        <div style={{ fontSize: 12.5, color: "#DDE4DA", marginTop: 7 }}>
+          {goalMet ? "✓ Meta do dia batida! " : ""}{introducedToday}/{pace} termos novos hoje · {totalIntroduced}/{terms.length} no total
+        </div>
+
+        {showPace && (
+          <div style={{ marginTop: 12, borderTop: "1px solid rgba(239,233,218,0.18)", paddingTop: 12 }}>
+            <div style={{ fontSize: 12, color: "#DDE4DA", marginBottom: 8 }}>Quantos termos NOVOS por dia?</div>
+            <div style={{ display: "flex", gap: 5 }}>
+              {PACE_STOPS.map((p) => (
+                <button key={p.v} onClick={() => setPace(p.v)}
+                  style={{
+                    flex: 1, border: `1.5px solid ${pace === p.v ? C.gold : "rgba(239,233,218,0.3)"}`,
+                    background: pace === p.v ? C.gold : "transparent", color: pace === p.v ? C.card : C.cream,
+                    borderRadius: 9, padding: "8px 2px", fontWeight: 700, fontSize: 14,
+                  }}>
+                  {p.v}
+                </button>
+              ))}
+            </div>
+            <div style={{ fontSize: 12, color: C.gold, fontWeight: 600, marginTop: 8, textAlign: "center" }}>
+              {(PACE_STOPS.find((p) => p.v === pace) || PACE_STOPS[2]).label} · {(PACE_STOPS.find((p) => p.v === pace) || PACE_STOPS[2]).hint}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {sessionDone || !current ? (
+        <div style={{ background: C.paper, border: `1px solid ${C.line}`, borderRadius: 16, padding: "30px 20px", textAlign: "center" }}>
+          <div style={{ fontSize: 40 }}>{goalMet ? "🎉" : "☕"}</div>
+          <div style={{ fontFamily: FONT_HEAD, fontSize: 21, fontWeight: 700, color: C.card, margin: "8px 0 6px" }}>
+            {goalMet ? "Meta do dia concluída!" : "Sessão em dia"}
+          </div>
+          <p style={{ fontSize: 14, color: C.inkSoft, margin: "0 0 14px", lineHeight: 1.5 }}>
+            {goalMet
+              ? `Você fixou ${introducedToday} termos hoje e manteve o streak em ${daily.streak || 0}. As revisões voltam sozinhas quando o intervalo vencer.`
+              : "Nada pendente agora. Volte quando as revisões vencerem."}
+            {newTermsRemaining === 0 && " 🏆 Você já viu todos os termos da Fase 1!"}
+          </p>
+          {newTermsRemaining > 0 && (
+            <button onClick={pullMore}
+              style={{ border: `1.5px solid ${C.goldDeep}`, background: C.paper, color: C.goldDeep, borderRadius: 10, padding: "10px 16px", fontWeight: 700, fontSize: 13.5 }}>
+              Puxar +{Math.min(pace, newTermsRemaining)} termos agora
+              <span style={{ display: "block", fontSize: 11, fontWeight: 500, color: C.inkSoft, marginTop: 2 }}>adianta o de amanhã · mais volume, menos retenção</span>
+            </button>
+          )}
+        </div>
+      ) : (
+        <>
+          <div style={{ fontSize: 12, color: C.inkSoft, fontWeight: 600, marginBottom: 8, textAlign: "center" }}>
+            {newsLeft > 0 && <span style={{ color: C.goldDeep }}>{newsLeft} {newsLeft === 1 ? "novo" : "novos"}</span>}
+            {newsLeft > 0 && reviewsLeft > 0 && " · "}
+            {reviewsLeft > 0 && <span>{reviewsLeft} {reviewsLeft === 1 ? "revisão" : "revisões"}</span>}
+            {" na fila · "}{current.theme}
+          </div>
+          <HybridCard
+            key={current.key}
+            term={current}
+            isNew={currentItem.isNew}
+            pronBest={pron[current.key] || 0}
+            savePron={savePron}
+            onRate={handleRate}
+          />
+        </>
+      )}
+
+      {/* Mapa da fala: como cada termo foi FALADO. Toque para praticar de novo. */}
+      <div style={{ marginTop: 18, background: C.paper, border: `1px solid ${C.line}`, borderRadius: 12, padding: "12px 12px 10px" }}>
+        <div style={{ fontSize: 12, fontWeight: 700, color: C.inkSoft, marginBottom: 8 }}>🎤 Mapa da fala</div>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
+          {terms.map((t, i) => {
+            const p = pron[t.key] || 0;
+            const seen = !!introduced[t.key];
+            const isCurrent = current && current.key === t.key;
+            const bg = p >= 80 ? C.ok : p > 0 ? C.gold : C.paper;
+            const spokenPending = seen && p === 0; // visto mas ainda não falado (ou "pulado")
+            return (
+              <button
+                key={t.key}
+                onClick={() => studyOne(t.key)}
+                title={`${t.term} — ${p >= 80 ? "falado bem" : p > 0 ? `falado ${p}%` : spokenPending ? "visto, fala pendente" : "não visto"}`}
+                style={{
+                  width: 26, height: 26, borderRadius: 7, fontSize: 11, fontWeight: 700,
+                  border: isCurrent ? `2px solid ${C.card}` : spokenPending ? `1.5px dashed ${C.goldDeep}` : `1.5px solid ${C.line}`,
+                  background: bg,
+                  color: p > 0 ? "#fff" : spokenPending ? C.goldDeep : C.inkSoft,
+                  opacity: seen || p > 0 ? 1 : 0.45,
+                }}
+              >
+                {p >= 80 ? "✓" : spokenPending ? "!" : i + 1}
+              </button>
+            );
+          })}
+        </div>
+        <div style={{ fontSize: 11, color: C.inkSoft, marginTop: 8, lineHeight: 1.5 }}>
+          <b style={{ color: C.ok }}>✓ verde</b> falou bem (≥80%) · <b style={{ color: C.goldDeep }}>dourado</b> dá pra melhorar · <b style={{ color: C.goldDeep }}>! tracejado</b> visto mas fala pendente · apagado = não visto
+        </div>
+        {(() => {
+          const green = terms.filter((t) => (pron[t.key] || 0) >= 80).length;
+          const allGreen = green === terms.length;
+          return (
+            <div style={{ marginTop: 8, fontSize: 12, fontWeight: 700, color: allGreen ? C.ok : C.goldDeep, textAlign: "center" }}>
+              {allGreen ? "🔓 Prova liberada! Todos os termos falados bem." : `🔒 Prova libera com todos verdes — ${green}/${terms.length}`}
+            </div>
+          );
+        })()}
+      </div>
+    </div>
+  );
+}
+
+// Card híbrido: termo em destaque + frase âncora + ouvir/falar + avaliação SRS.
+function HybridCard({ term, isNew, pronBest, savePron, onRate }) {
+  const [flipped, setFlipped] = useState(false);
+  const {
+    listening, starting, liveText, result, srError, selfMode, audioUrl,
+    myAudioRef, speak, playMine, listen, stopListening,
+  } = useSpeech(term.phrase, (pct) => savePron(term.key, pct));
+
+  const roleLabel = term.role === "cust" ? "👂 O cliente diz" : "🗣 Você diz";
+  const fb = result
+    ? result.pct >= 80 ? { t: "Pronúncia clara!", c: C.ok } : result.pct >= 60 ? { t: "Quase lá.", c: "#B4842D" } : { t: "Repita devagar.", c: C.bad }
+    : null;
+
+  return (
+    <div style={{ background: C.paper, border: `1.5px solid ${isNew ? C.goldDeep : C.line}`, borderRadius: 16, padding: "22px 18px", boxShadow: "0 4px 14px rgba(32,52,42,0.10)" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+        <span style={{ fontSize: 10.5, letterSpacing: 1.5, textTransform: "uppercase", color: C.goldDeep, fontWeight: 700 }}>
+          {isNew ? "✨ Termo novo" : "🔁 Revisão"} · {term.theme}
+        </span>
+        {pronBest > 0 && <span style={{ fontSize: 11.5, color: pronBest >= 80 ? C.ok : C.goldDeep, fontWeight: 700 }}>🎤 {pronBest}%</span>}
+      </div>
+
+      {/* Termo em destaque */}
+      <div style={{ textAlign: "center" }}>
+        <div style={{ fontFamily: FONT_HEAD, fontSize: 30, fontWeight: 700, color: C.ink, lineHeight: 1.2 }}>{term.term}</div>
+        {flipped && <div style={{ fontSize: 15, color: C.goldDeep, fontWeight: 600, marginTop: 4 }}>{term.termPt}</div>}
+      </div>
+
+      {!flipped ? (
+        <div style={{ textAlign: "center", marginTop: 18 }}>
+          <button onClick={() => setFlipped(true)}
+            style={{ border: "none", background: C.card, color: C.cream, borderRadius: 10, padding: "11px 20px", fontWeight: 700, fontSize: 14.5 }}>
+            Ver significado e uso
+          </button>
+          <div style={{ fontSize: 12, color: C.inkSoft, marginTop: 10 }}>Você lembra o que significa e como usar?</div>
+        </div>
+      ) : (
+        <>
+          {/* Frase âncora */}
+          <div style={{ marginTop: 16, background: C.bg, borderRadius: 12, padding: "14px 14px" }}>
+            <div style={{ fontSize: 10.5, letterSpacing: 1.5, textTransform: "uppercase", color: C.goldDeep, fontWeight: 700, marginBottom: 6 }}>{roleLabel}</div>
+            <div style={{ fontFamily: FONT_HEAD, fontSize: 18, fontWeight: 600, lineHeight: 1.4 }}>
+              {result
+                ? term.phrase.split(" ").map((w, i) => (
+                    <span key={i} style={{ color: result.displayHits[i] ? C.ok : C.bad }}>{w} </span>
+                  ))
+                : <span style={{ color: C.ink }}>{term.phrase}</span>}
+            </div>
+            <div style={{ fontSize: 13, color: C.inkSoft, marginTop: 4 }}>{term.phrasePt}</div>
+            {result && (
+              <div style={{ fontSize: 11.5, color: C.inkSoft, marginTop: 5 }}>
+                🟢 falou bem · 🔴 repita — <i>ouvi: "{result.transcript}"</i>
+              </div>
+            )}
+
+            <div style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap", marginTop: 12 }}>
+              <PronBtn onClick={() => speak(0.95)} label="🔊 Ouvir" />
+              <PronBtn onClick={() => speak(0.6)} label="🐢 Devagar" />
+              {listening ? (
+                <button onClick={stopListening}
+                  style={{ border: "none", borderRadius: 10, padding: "11px 18px", fontWeight: 700, fontSize: 14.5, background: starting ? C.goldDeep : C.bad, color: C.cream }}>
+                  {starting ? "⏳ Preparando…" : "⏹ Parar"}
+                </button>
+              ) : (
+                <button onClick={listen}
+                  style={{ border: "none", borderRadius: 10, padding: "11px 18px", fontWeight: 700, fontSize: 14.5, background: C.card, color: C.cream }}>
+                  🎤 Falar
+                </button>
+              )}
+            </div>
+
+            {listening && (
+              <div style={{ marginTop: 10, background: C.paper, borderRadius: 10, padding: "9px 11px" }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: starting ? C.goldDeep : C.bad }}>
+                  {starting ? "⏳ Preparando o microfone…" : "🔴 Ouvindo… fale e toque em Parar"}
+                </div>
+                {liveText && <div style={{ fontSize: 13, color: C.ink, fontStyle: "italic", marginTop: 4 }}>“{liveText}”</div>}
+              </div>
+            )}
+            {audioUrl && !listening && (
+              <div style={{ marginTop: 10, textAlign: "center" }}>
+                <PronBtn onClick={playMine} label="▶️ Ouvir minha fala" />
+                <audio ref={myAudioRef} src={audioUrl} preload="auto" style={{ display: "none" }} />
+              </div>
+            )}
+            {result && (
+              <div style={{ marginTop: 10, textAlign: "center" }}>
+                <span style={{ fontFamily: FONT_HEAD, fontSize: 22, fontWeight: 700, color: fb.c }}>{result.pct}%</span>
+                <span style={{ fontSize: 12.5, color: fb.c, fontWeight: 600, marginLeft: 8 }}>{fb.t}</span>
+              </div>
+            )}
+            {srError && (
+              <div style={{ marginTop: 10, fontSize: 12.5, color: C.bad, lineHeight: 1.5, background: "#FBF1EA", borderRadius: 10, padding: "9px 11px" }}>{srError}</div>
+            )}
+
+            {selfMode && (
+              <div style={{ marginTop: 10, borderTop: `1px solid ${C.line}`, paddingTop: 10 }}>
+                <div style={{ fontSize: 12.5, fontWeight: 700, color: C.card, marginBottom: 4, textAlign: "center" }}>🪞 Autoavaliação da fala</div>
+                <div style={{ fontSize: 11.5, color: C.inkSoft, textAlign: "center", marginBottom: 8, lineHeight: 1.4 }}>
+                  Toque em Ouvir, repita imitando o ritmo, e seja honesto:
+                </div>
+                <div style={{ display: "flex", gap: 8 }}>
+                  <button onClick={() => savePron(term.key, 80)}
+                    style={{ flex: 1, border: `1.5px solid ${C.ok}`, background: C.paper, color: C.ok, borderRadius: 10, padding: "10px 6px", fontWeight: 700, fontSize: 13 }}>
+                    ✓ Falei com confiança
+                  </button>
+                  <button onClick={() => savePron(term.key, 40)}
+                    style={{ flex: 1, border: `1.5px solid ${C.goldDeep}`, background: C.paper, color: C.goldDeep, borderRadius: 10, padding: "10px 6px", fontWeight: 700, fontSize: 13 }}>
+                    ↻ Preciso repetir
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+
+        </>
+      )}
+
+      {/* Avaliação SRS — sempre visível, já quando o termo em inglês aparece.
+          Você pode se avaliar de cara (se já sabe) ou ver o significado antes. */}
+      <div style={{ fontSize: 12, color: C.inkSoft, textAlign: "center", margin: "16px 0 8px", fontWeight: 600 }}>
+        {flipped ? "Quão bem você domina este termo?" : "Já sabe? Avalie — ou veja o significado antes."}
+      </div>
+      <div style={{ display: "flex", gap: 6 }}>
+        {RATINGS.map((rt, i) => (
+          <button key={i} onClick={() => onRate(i)}
+            style={{ flex: 1, border: "none", background: rt.color, color: "#fff", borderRadius: 10, padding: "10px 2px", fontWeight: 700, fontSize: 12.5, lineHeight: 1.25 }}>
+            {rt.label}
+            <span style={{ display: "block", fontSize: 10, fontWeight: 500, opacity: 0.9 }}>{rt.sub}</span>
+          </button>
+        ))}
+      </div>
+    </div>
   );
 }
 
