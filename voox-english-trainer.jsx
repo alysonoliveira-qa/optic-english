@@ -722,6 +722,18 @@ const DYNAMICS = {
         mission: "Oferecer a cópia do grau a partir das lentes atuais e conduzir a venda.",
         twist: "Pergunte: \"Do you have this in black?\" sobre a armação mostrada.",
       },
+      {
+        title: "Óculos para o filho",
+        customer: "Você quer óculos para seu filho de 8 anos. Se preocupa se é resistente e leve, e quer um estojo e uma cordinha.",
+        mission: "Recomendar uma armação infantil flexível e resistente, oferecer os acessórios e informar o prazo.",
+        twist: "Pergunte: \"Is it safe if he drops it?\"",
+      },
+      {
+        title: "Só dando uma olhada",
+        customer: "Você entra dizendo que está \"só olhando\". Está sem pressa, mas na verdade passa o dia no computador e sente os olhos cansados.",
+        mission: "Acolher sem pressionar, puxar assunto (small talk) e descobrir a necessidade real para então mostrar opções.",
+        twist: "Comece com \"I'm just looking, thanks.\" e só depois diga \"Actually, do you have blue light lenses?\"",
+      },
     ],
     checklist: [
       "Cumprimentou o cliente em inglês",
@@ -751,6 +763,18 @@ const DYNAMICS = {
         customer: "Você já comprou e voltou com dúvidas: como limpar, se risca fácil, se pode trocar a armação, o que a garantia cobre.",
         mission: "Responder cada dúvida com clareza e aproveitar para oferecer o filtro de luz azul.",
         twist: "Diga: \"My eyes hurt when I use my phone at night.\"",
+      },
+      {
+        title: "Presente para o marido",
+        customer: "Você quer dar óculos de sol de presente para seu marido, mas não sabe o grau dele nem o tamanho certo. Se preocupa se poderá trocar caso não sirva.",
+        mission: "Orientar a compra de presente sem receita, explicar a política de troca e sugerir vale-presente como alternativa segura.",
+        twist: "Pergunte: \"What if he doesn't like it?\"",
+      },
+      {
+        title: "Segunda via urgente",
+        customer: "Você perdeu seus óculos e precisa de um novo com urgência. Tem uma foto da receita antiga no celular.",
+        mission: "Acolher a urgência, conferir a receita pela foto, fazer o cadastro e negociar um prazo expresso.",
+        twist: "Pergunte: \"I need them by tomorrow, is that possible?\"",
       },
     ],
     checklist: [
@@ -783,6 +807,18 @@ const DYNAMICS = {
         customer: "Você quer a melhor lente mas negocia tudo: acha caro, pede desconto, compara com a internet, pergunta de garantia.",
         mission: "Defender o valor (não só o preço): custo por dia, serviço incluso, garantia de adaptação, condições de pagamento.",
         twist: "Diga: \"I saw cheaper prices online.\" e insista uma segunda vez no desconto.",
+      },
+      {
+        title: "Comparando duas óticas",
+        customer: "Você já tem um orçamento mais barato de outra ótica e veio comparar. Quer entender por que aqui é mais caro antes de decidir.",
+        mission: "Fazer a anamnese, mostrar o valor agregado (exame, garantia de adaptação, serviço e ajustes) e justificar a diferença sem baixar o preço na hora.",
+        twist: "Diga: \"The other store quoted me nine hundred. Why are you more expensive?\"",
+      },
+      {
+        title: "Retorno por inadaptação",
+        customer: "Você voltou frustrado porque não se adaptou à multifocal que comprou. Está considerando pedir o dinheiro de volta.",
+        mission: "Acolher a frustração, investigar a causa (medição, hábito de uso, tipo de lente) e oferecer solução dentro da garantia de adaptação antes de falar em reembolso.",
+        twist: "Diga: \"I want my money back.\"",
       },
     ],
     checklist: [
